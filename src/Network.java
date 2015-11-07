@@ -1,3 +1,5 @@
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -17,8 +19,8 @@ public class Network {
 		this.flows = flows;
 	}
 
-	public static Network parse(String filename) {
-		Scanner sc = new Scanner(filename);
+	public static Network parse(String filename)  throws IOException{
+		Scanner sc = new Scanner(new File(filename));
 		int H = sc.nextInt();
 		int R = sc.nextInt();
 		int L = sc.nextInt();
