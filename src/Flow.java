@@ -9,4 +9,9 @@ public class Flow {
 	          return this.name.equals(((Flow)obj).name);
 	      }
 	}
+	
+    public int hashCode() {
+    	return this.name.hashCode();
+    }
+
 }

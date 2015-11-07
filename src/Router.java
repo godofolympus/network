@@ -13,4 +13,9 @@ public class Router {
 	          return this.name.equals(((Router)obj).name);
 	      }
 	}
+	
+    public int hashCode() {
+    	return this.name.hashCode();
+    }
+
 }
