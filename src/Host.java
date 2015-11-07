@@ -17,4 +17,8 @@ public class Host extends Component {
 			return this.hostName.equals(((Host) obj).hostName);
 		}
 	}
+
+	public int hashCode() {
+		return this.hostName.hashCode();
+	}
 }

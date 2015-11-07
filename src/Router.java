@@ -2,6 +2,7 @@ public class Router extends Component {
 	String routerName;
 	Link leftLink;
 	Link rightLink;
+
 	// Routing table?
 
 	public Router(String name) {
@@ -15,4 +16,9 @@ public class Router extends Component {
 			return this.routerName.equals(((Router) obj).routerName);
 		}
 	}
+
+	public int hashCode() {
+		return this.routerName.hashCode();
+	}
+
 }

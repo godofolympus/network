@@ -23,4 +23,9 @@ public class Link {
 			return this.linkName.equals(((Link) obj).linkName);
 		}
 	}
+
+	public int hashCode() {
+		return this.linkName.hashCode();
+	}
+
 }
