@@ -10,16 +10,15 @@ public class Network {
 	HashMap<String, Flow> flows;
 	HashMap<String, Component> components;
 
-	public Network(HashMap<String, Host> hosts,
-			HashMap<String, Router> routers, HashMap<String, Link> links,
-			HashMap<String, Flow> flows) {
+	public Network(HashMap<String, Host> hosts, HashMap<String, Router> routers,
+			HashMap<String, Link> links, HashMap<String, Flow> flows) {
 		this.hosts = hosts;
 		this.routers = routers;
 		this.links = links;
 		this.flows = flows;
 	}
 
-	public static Network parse(String filename)  throws IOException{
+	public static Network parse(String filename) throws IOException {
 		Scanner sc = new Scanner(new File(filename));
 		int H = sc.nextInt();
 		int R = sc.nextInt();
@@ -56,10 +55,10 @@ public class Network {
 			double linkDelay = sc.nextDouble();
 			double bufferSize = sc.nextDouble();
 
-			links.put(linkName, new Link(linkName,
-					components.get(leftEndpoint),
-					components.get(rightEndpoint), linkRate, linkDelay,
-					bufferSize));
+			links.put(linkName,
+					new Link(linkName, components.get(leftEndpoint),
+							components.get(rightEndpoint), linkRate, linkDelay,
+							bufferSize));
 		}
 
 		for (int i = 0; i < F; i++) {
@@ -68,9 +67,8 @@ public class Network {
 			String dst = sc.next();
 			double amt = sc.nextDouble();
 			double time = sc.nextDouble();
-			flows.put(flowName,
-					new Flow(flowName, hosts.get(src), hosts.get(dst), amt,
-							time));
+			flows.put(flowName, new Flow(flowName, hosts.get(src),
+					hosts.get(dst), amt, time));
 		}
 
 		sc.close();

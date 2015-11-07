@@ -5,7 +5,7 @@ public class Simulation {
 
 	/**
 	 * @param args
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public static void main(String[] args) throws IOException {
 		System.out.print("Enter Filename for Test Case: ");
