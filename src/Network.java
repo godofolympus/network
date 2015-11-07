@@ -25,12 +25,12 @@ public class Network {
 		List<Host> hosts = new ArrayList<Host>();
 		for(int i = 0; i < H; i++){
 			String hostName = sc.next();
-			hosts.add(new Host());
+			hosts.add(new Host(hostName));
 		}
 		List<Router> routers = new ArrayList<Router>();
 		for(int i = 0; i < R; i++){
 			String routerName = sc.next();
-			routers.add(new Router());
+			routers.add(new Router(routerName));
 		}
 		List<Link> links = new ArrayList<Link>();
 		for(int i = 0; i < L; i++){
