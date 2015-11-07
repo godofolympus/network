@@ -6,9 +6,11 @@ public class Network {
 	HashMap<String, Router> routers;
 	HashMap<String, Link> links;
 	HashMap<String, Flow> flows;
+	HashMap<String, Component> components;
 
-	public Network(HashMap<String, Host> hosts, HashMap<String, Router> routers,
-			HashMap<String, Link> links, HashMap<String, Flow> flows) {
+	public Network(HashMap<String, Host> hosts,
+			HashMap<String, Router> routers, HashMap<String, Link> links,
+			HashMap<String, Flow> flows) {
 		this.hosts = hosts;
 		this.routers = routers;
 		this.links = links;
@@ -21,17 +23,29 @@ public class Network {
 		int R = sc.nextInt();
 		int L = sc.nextInt();
 		int F = sc.nextInt();
+
+		HashMap<String, Component> components = new HashMap<String, Component>();
 		HashMap<String, Host> hosts = new HashMap<String, Host>();
+		HashMap<String, Router> routers = new HashMap<String, Router>();
+		HashMap<String, Link> links = new HashMap<String, Link>();
+		HashMap<String, Flow> flows = new HashMap<String, Flow>();
+
 		for (int i = 0; i < H; i++) {
 			String hostName = sc.next();
-			hosts.put(hostName, new Host(hostName));
+			Host host = new Host(hostName);
+
+			hosts.put(hostName, host);
+			components.put(hostName, host);
 		}
-		HashMap<String, Router> routers = new HashMap<String, Router>();
+
 		for (int i = 0; i < R; i++) {
 			String routerName = sc.next();
-			routers.put(routerName, new Router(routerName));
+			Router router = new Router(routerName);
+
+			routers.put(routerName, router);
+			components.put(routerName, router);
 		}
-		HashMap<String, Link> links = new HashMap<String, Link>();
+
 		for (int i = 0; i < L; i++) {
 			String linkName = sc.next();
 			String leftEndpoint = sc.next();
@@ -39,17 +53,24 @@ public class Network {
 			double linkRate = sc.nextDouble();
 			double linkDelay = sc.nextDouble();
 			double bufferSize = sc.nextDouble();
-			links.put(linkName, new Link(linkName));
+
+			links.put(linkName, new Link(linkName,
+					components.get(leftEndpoint),
+					components.get(rightEndpoint), linkRate, linkDelay,
+					bufferSize));
 		}
-		HashMap<String, Flow> flows = new HashMap<String, Flow>();
+
 		for (int i = 0; i < F; i++) {
 			String flowName = sc.next();
 			String src = sc.next();
 			String dst = sc.next();
 			double amt = sc.nextDouble();
-			double startTime = sc.nextDouble();
-			flows.put(flowName, new Flow());
+			double time = sc.nextDouble();
+			flows.put(flowName,
+					new Flow(flowName, hosts.get(src), hosts.get(dst), amt,
+							time));
 		}
+
 		sc.close();
 		return new Network(hosts, routers, links, flows);
 	}

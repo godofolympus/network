@@ -6,7 +6,11 @@
 /Router.class
 /Simulation.class
 /Network.class
+<<<<<<< HEAD
 /InitializeFlowEvent.class
 /InitializeShortestPathInfoEvent.class
 /SendPacketEvent.class
 /RecievePacketEvent.class
+=======
+/Component.class
+>>>>>>> refs/remotes/origin/master

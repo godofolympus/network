@@ -1,21 +1,31 @@
-
 public class Link {
-	String name;
+	String linkName;
+	Component leftEndPoint;
+	Component rightEndPoint;
+	double linkRate;
+	double linkDelay;
+	double bufferSize;
 
-	public Link(String name){
-		this.name = name;
+	public Link(String name, Component leftEndPoint, Component rightEndPoint,
+			double linkRate, double linkDelay, double bufferSize) {
+		this.linkName = name;
+		this.leftEndPoint = leftEndPoint;
+		this.rightEndPoint = rightEndPoint;
+		this.linkRate = linkRate;
+		this.linkDelay = linkDelay;
+		this.bufferSize = bufferSize;
 	}
 
 	public boolean equals(Object obj) {
 		if (obj == null || obj.getClass() != getClass()) {
 			return false;
 		} else {
-			return this.name.equals(((Link) obj).name);
+			return this.linkName.equals(((Link) obj).linkName);
 		}
 	}
 
 	public int hashCode() {
-		return this.name.hashCode();
+		return this.linkName.hashCode();
 	}
 
 }
