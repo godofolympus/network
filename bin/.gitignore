@@ -6,3 +6,7 @@
 /Router.class
 /Simulation.class
 /Network.class
+/InitializeFlowEvent.class
+/InitializeShortestPathInfoEvent.class
+/SendPacketEvent.class
+/RecievePacketEvent.class

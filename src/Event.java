@@ -1,10 +1,12 @@
 
-public class Event implements Comparable<Event>{
+public abstract class Event implements Comparable<Event>{
+	double time;
 
 	@Override
 	public int compareTo(Event o) {
-		// TODO Auto-generated method stub
-		return 0;
+		return (int)(this.time - o.time);
 	}
+
+	public abstract void handle();
 
 }
