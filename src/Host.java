@@ -1,17 +1,20 @@
+import java.util.List;
 
-public class Host {
-	String name;
-	
-	public Host(String name){
-		this.name = name;
-	}
-	
-	public boolean equals(Object obj){
-	     if (obj == null || obj.getClass() != getClass()) {
-	         return false;
-	      } else {
-	          return this.name.equals(((Host)obj).name);
-	      }
+public class Host extends Component {
+	String hostName;
+	Link adjLink;
+	List<Flow> currentFlows;
+	List<Flow> currentWindowSizes;
+
+	public Host(String name) {
+		this.hostName = name;
 	}
 
+	public boolean equals(Object obj) {
+		if (obj == null || obj.getClass() != getClass()) {
+			return false;
+		} else {
+			return this.hostName.equals(((Host) obj).hostName);
+		}
+	}
 }
