@@ -1,7 +1,7 @@
 CS 143 Network Project
 
 Input Format:
-Three numbers, H, R, L, F which correspond to the number of hosts, routers, links, and flows respectively
+Four numbers, H, R, L, F which correspond to the number of hosts, routers, links, and flows respectively
 
 H lines, each containing the name of a host
 
