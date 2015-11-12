@@ -1,10 +1,14 @@
+import java.util.List;
 
 public class InitializeShortestPathInfoEvent extends Event {
 
-	@Override
-	public void handle() {
-		// TODO Auto-generated method stub
+	public InitializeShortestPathInfoEvent(double time) {
+		super(time);
+	}
 
+	@Override
+	public List<Event> handle() {
+		return null;
 	}
 
 }

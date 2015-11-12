@@ -23,6 +23,5 @@ public class Flow {
 
 	public int hashCode() {
 		return this.flowName.hashCode();
-	}
-
+	}	
 }

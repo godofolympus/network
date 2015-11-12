@@ -1,10 +1,16 @@
+import java.util.List;
 
 public class InitializeFlowEvent extends Event {
+	Flow flow;
+
+	public InitializeFlowEvent(double startTime, Flow flow) {
+		super(startTime);
+		this.flow = flow;
+	}
 
 	@Override
-	public void handle() {
-		// TODO Auto-generated method stub
-
+	public List<Event> handle() {
+		return null;
 	}
 
 }

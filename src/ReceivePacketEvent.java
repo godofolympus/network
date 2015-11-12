@@ -1,9 +1,9 @@
 import java.util.List;
 
-public class SendPacketEvent extends Event {
+public class ReceivePacketEvent extends Event {
 	Packet packet;
 
-	public SendPacketEvent(double time, Packet packet) {
+	public ReceivePacketEvent(double time, Packet packet) {
 		super(time);
 		this.packet = packet;
 	}
