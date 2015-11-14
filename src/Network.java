@@ -10,8 +10,9 @@ public class Network {
 	HashMap<String, Flow> flows;
 	HashMap<String, Component> components;
 
-	public Network(HashMap<String, Host> hosts, HashMap<String, Router> routers,
-			HashMap<String, Link> links, HashMap<String, Flow> flows) {
+	public Network(HashMap<String, Host> hosts,
+			HashMap<String, Router> routers, HashMap<String, Link> links,
+			HashMap<String, Flow> flows) {
 		this.hosts = hosts;
 		this.routers = routers;
 		this.links = links;
@@ -55,10 +56,10 @@ public class Network {
 			double linkDelay = sc.nextDouble();
 			double bufferSize = sc.nextDouble();
 
-			links.put(linkName,
-					new Link(linkName, components.get(leftEndpoint),
-							components.get(rightEndpoint), linkRate, linkDelay,
-							bufferSize));
+			links.put(linkName, new Link(linkName,
+					components.get(leftEndpoint),
+					components.get(rightEndpoint), linkRate, linkDelay / 1000,
+					bufferSize*1000));
 		}
 
 		for (int i = 0; i < F; i++) {
@@ -67,8 +68,9 @@ public class Network {
 			String dst = sc.next();
 			double amt = sc.nextDouble();
 			double time = sc.nextDouble();
-			flows.put(flowName, new Flow(flowName, hosts.get(src),
-					hosts.get(dst), amt, time));
+			flows.put(flowName,
+					new Flow(flowName, hosts.get(src), hosts.get(dst),
+							amt * 1000 * 1000, time));
 		}
 
 		sc.close();

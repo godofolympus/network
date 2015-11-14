@@ -1,15 +1,16 @@
-import java.util.List;
+import java.util.HashMap;
 
 public class Host extends Component {
 	String hostName;
 	Link adjLink;
-	List<Flow> currentFlows;
-	List<Flow> currentWindowSizes;
+	HashMap<String, Flow> currentFlows;
 
 	public Host(String name) {
 		this.hostName = name;
 	}
-
+	
+	public
+	
 	public boolean equals(Object obj) {
 		if (obj == null || obj.getClass() != getClass()) {
 			return false;

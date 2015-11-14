@@ -38,7 +38,7 @@ public class Simulation {
 			// If handling this event spawns new events, add them to the
 			// priority queue
 			if (newEvents != null) {
-				for (Event newEvent: newEvents) {
+				for (Event newEvent : newEvents) {
 					eventQueue.add(newEvent);
 				}
 			}
