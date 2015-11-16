@@ -8,11 +8,13 @@ public class Flow {
 	Host dstHost;
 	double dataAmount;
 	double startTime;
-	
+	double rtt = 10;
+
 	int windowSize;
 	int totalPackets;
-	List<Packet> packets;
-	HashMap<String, Packet> outgoingPackets;
+	int currentPackets = 0;
+	int maxPacketId = 0;
+	HashMap<String, Packet> outgoingPackets = new HashMap<String, Packet>();
 
 	public Flow(String name, Host src, Host dest, double amt, double time) {
 		this.flowName = name;
@@ -20,10 +22,9 @@ public class Flow {
 		this.dstHost = dest;
 		this.dataAmount = amt;
 		this.startTime = time;
-		
+
 		this.totalPackets = (int) Math.ceil(amt/Constants.PACKET_SIZE);
 		this.windowSize = Constants.DEFAULT_WINDOW_SIZE;
-		this.packets = new ArrayList<Packet>();
 	}
 
 	public void updateWindowSize() {

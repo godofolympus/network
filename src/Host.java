@@ -1,25 +1,21 @@
 import java.util.HashMap;
 
 public class Host extends Component {
-	String hostName;
-	Link adjLink;
-	HashMap<String, Flow> currentFlows;
+	HashMap<String, Flow> currentFlows = new HashMap<String, Flow>();
 
 	public Host(String name) {
-		this.hostName = name;
+		super(name);
 	}
-	
-	public
-	
+
 	public boolean equals(Object obj) {
 		if (obj == null || obj.getClass() != getClass()) {
 			return false;
 		} else {
-			return this.hostName.equals(((Host) obj).hostName);
+			return this.name.equals(((Host) obj).name);
 		}
 	}
 
 	public int hashCode() {
-		return this.hostName.hashCode();
+		return this.name.hashCode();
 	}
 }

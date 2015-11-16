@@ -9,7 +9,11 @@ public abstract class Event implements Comparable<Event> {
 	
 	@Override
 	public int compareTo(Event o) {
-		return (int) (this.time - o.time);
+		return this.time - o.time <= 0 ? -1 : 1;
+	}
+	
+	public String toString(){
+		return ""+time;
 	}
 
 	public abstract List<Event> handle();

@@ -9,7 +9,12 @@ public class Constants {
 	
 	// Packet types
 	public enum PacketType {
-		DATA_PACKET,
-		ACK_PACKET
+		DATA,
+		ACK
+	}
+	
+	public enum Direction {
+		RIGHT,
+		LEFT
 	}
 }

@@ -22,6 +22,9 @@ public class Simulation {
 		Network network = Network.parse(filename);
 		PriorityQueue<Event> eventQueue = new PriorityQueue<Event>();
 
+		// Routing Table
+		eventQueue.add(new RoutingEvent(-1, network.routers));
+
 		// Initialize eventQueue with initializeFlowEvent objects for
 		// each flow we want to simulate
 		for (Flow flow : network.flows.values()) {
@@ -31,10 +34,13 @@ public class Simulation {
 		}
 
 		// Begin simulation by popping from eventQueue until it is empty
+		int count = 0;
 		while (eventQueue.size() != 0) {
+			if(count >= 200)
+				break;
+			//System.out.println("Event Queue: " + eventQueue);
 			Event event = eventQueue.poll();
 			List<Event> newEvents = event.handle();
-
 			// If handling this event spawns new events, add them to the
 			// priority queue
 			if (newEvents != null) {
@@ -42,6 +48,7 @@ public class Simulation {
 					eventQueue.add(newEvent);
 				}
 			}
+			count++;
 		}
 	}
 

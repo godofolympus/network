@@ -15,10 +15,15 @@ public class InitializeFlowEvent extends Event {
 		List<Event> events = new ArrayList<Event>();
 
 		for (int i = 0; i < Math.min(flow.windowSize, flow.totalPackets); i++) {
-			Packet packet = new Packet(i, Constants.PacketType.DATA_PACKET,
-					Constants.PACKET_SIZE, flow.srcHost, flow.dstHost);
+			Packet packet = new Packet("" + flow.maxPacketId,
+					Constants.PacketType.DATA, Constants.PACKET_SIZE,
+					flow.srcHost, flow.dstHost, flow.flowName);
+			flow.maxPacketId++;
 			flow.outgoingPackets.put(packet.id, packet);
-			events.add(new SendPacketEvent(time, packet));
+			Link link = flow.srcHost.links.values().iterator().next();
+			Component currentDst = link.getAdjacentEndpoint(flow.srcHost);
+			events.add(new SendPacketEvent(time + flow.maxPacketId / 100000.0,
+					packet, flow.srcHost, currentDst, link));
 		}
 
 		return events;
