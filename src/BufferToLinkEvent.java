@@ -3,22 +3,20 @@ import java.util.List;
 
 public class BufferToLinkEvent extends Event {
 	Link link;
-	Packet packet;
 	Constants.Direction direction;
 
 	public BufferToLinkEvent(double time, Link link, Packet packet,
 			Constants.Direction direction) {
-		super(time);
+		super(time, packet);
 		this.link = link;
-		this.packet = packet;
 		this.direction = direction;
 	}
 
 	@Override
 	public List<Event> handle() {
 		ArrayList<Event> newEvents = new ArrayList<Event>();
-		System.out.println("Buffer to Link Event at link " + link.linkName + ": Packet " + packet.id
-				+ ", " + "Time: " + time);
+		System.out.println("Buffer to Link Event at Link " + link.linkName
+				+ ": Packet " + packet.id + ", " + "Time: " + time);
 		link.packets.poll();
 		link.directions.poll();
 		if (direction == Constants.Direction.RIGHT) {

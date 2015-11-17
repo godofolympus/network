@@ -4,3 +4,4 @@
 /RoutingEvent.class
 /BufferToLinkEvent.class
 /Constants$Direction.class
+/NegAckEvent.class

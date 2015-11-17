@@ -8,7 +8,7 @@ public class Component {
 	public Component(String name) {
 		this.name = name;
 	}
-	
+
 	public int hashCode() {
 		return this.name.hashCode();
 	}
@@ -20,8 +20,8 @@ public class Component {
 			return this.name.equals(((Component) obj).name);
 		}
 	}
-	
-	public String toString(){
+
+	public String toString() {
 		return this.name;
 	}
 }

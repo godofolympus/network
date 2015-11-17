@@ -1,9 +1,9 @@
 import java.util.HashMap;
 import java.util.List;
 
-public class RoutingEvent extends Event{
+public class RoutingEvent extends Event {
 	HashMap<String, Router> routers;
-	
+
 	public RoutingEvent(double time, HashMap<String, Router> routers) {
 		super(time);
 		this.routers = routers;
@@ -12,18 +12,18 @@ public class RoutingEvent extends Event{
 	@Override
 	public List<Event> handle() {
 		boolean distancesChanged = true;
-		for(Router r:routers.values()){
+		for (Router r : routers.values()) {
 			System.out.println("Name " + r.name + ", " + r.links.size());
 			r.initializeBellmanFord();
 		}
-		for(Router r:routers.values()){
+		for (Router r : routers.values()) {
 			r.sendRoutingInfo();
 		}
-		while(distancesChanged){
+		while (distancesChanged) {
 			distancesChanged = false;
-			for(Router r:routers.values()){
+			for (Router r : routers.values()) {
 				boolean changed = r.updateTable();
-				if(changed){
+				if (changed) {
 					r.sendRoutingInfo();
 					distancesChanged = changed;
 				}

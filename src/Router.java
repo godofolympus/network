@@ -1,7 +1,7 @@
 import java.util.HashMap;
 
 public class Router extends Component {
-	//HashMap<String, Link> links = new HashMap<String, Link>();
+	// HashMap<String, Link> links = new HashMap<String, Link>();
 	HashMap<String, Component> components;
 
 	// Routing table?
@@ -32,10 +32,11 @@ public class Router extends Component {
 		if (distancesList == null) {
 			return false;
 		}
-		for(Link link:distancesList.keySet()){
+		for (Link link : distancesList.keySet()) {
 			HashMap<String, Double> newDistances = distancesList.get(link);
-			for(String componentName: newDistances.keySet()){
-				double newDist = link.linkDelay + newDistances.get(componentName); 
+			for (String componentName : newDistances.keySet()) {
+				double newDist = link.linkDelay
+						+ newDistances.get(componentName);
 				if (newDist < distances.get(componentName)) {
 					distances.put(componentName, newDist);
 					routing.put(componentName, link);

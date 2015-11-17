@@ -2,14 +2,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SendPacketEvent extends Event {
-	Packet packet;
 	Link link;
 	Component src;
 	Component dst;
 
 	public SendPacketEvent(double time, Packet packet, Component src,
 			Component dst, Link link) {
-		super(time);
+		super(time, packet);
 		this.packet = packet;
 		this.src = src;
 		this.dst = dst;
@@ -19,9 +18,9 @@ public class SendPacketEvent extends Event {
 	@Override
 	public List<Event> handle() {
 		ArrayList<Event> newEvents = new ArrayList<Event>();
-		System.out.println("Sending Packet " + packet.id + " to "
-				+ packet.dstHost + " from " + src.name+ ", Buffer: " + link.currentBufferAmt + ","
-				+ link.bufferSize + ", Time: " + time);
+		System.out.println("Sending " + packet.packetType + " Packet "
+				+ packet.id + " from " + src.name + " to " + packet.dstHost
+				+ ", Time: " + time);
 		if (link.currentBufferAmt < link.bufferSize - packet.size) {
 			Constants.Direction dir = null;
 			if (src.equals(link.leftEndPoint)) {

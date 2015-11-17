@@ -56,7 +56,7 @@ public class Network {
 			double linkDelay = sc.nextDouble();
 			double bufferSize = sc.nextDouble();
 			Link link = new Link(linkName, components.get(leftEndpoint),
-					components.get(rightEndpoint), linkRate * 1000 * 1000/8.0,
+					components.get(rightEndpoint), linkRate * 1000 * 1000 / 8.0,
 					linkDelay / 1000, bufferSize * 1000);
 			links.put(linkName, link);
 			components.get(leftEndpoint).links.put(linkName, link);

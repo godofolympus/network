@@ -1,6 +1,4 @@
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class Flow {
 	String flowName;
@@ -8,13 +6,17 @@ public class Flow {
 	Host dstHost;
 	double dataAmount;
 	double startTime;
-	double rtt = 10;
+	double rtt = 0.1;
 
 	int windowSize;
 	int totalPackets;
 	int currentPackets = 0;
 	int maxPacketId = 0;
-	HashMap<String, Packet> outgoingPackets = new HashMap<String, Packet>();
+	int minUnacknowledgedPacketSender = 0;
+	int minUnacknowledgedPacketReceiver = 0;
+	HashMap<Integer, Packet> sendingBuffer = new HashMap<Integer, Packet>();
+	HashMap<Integer, Double> sendingTimes = new HashMap<Integer, Double>();
+	HashMap<Integer, Packet> receivingBuffer = new HashMap<Integer, Packet>();
 
 	public Flow(String name, Host src, Host dest, double amt, double time) {
 		this.flowName = name;
@@ -23,7 +25,7 @@ public class Flow {
 		this.dataAmount = amt;
 		this.startTime = time;
 
-		this.totalPackets = (int) Math.ceil(amt/Constants.PACKET_SIZE);
+		this.totalPackets = (int) Math.ceil(amt / Constants.PACKET_SIZE);
 		this.windowSize = Constants.DEFAULT_WINDOW_SIZE;
 	}
 

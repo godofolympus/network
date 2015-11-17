@@ -1,12 +1,13 @@
 public class Packet {
-	String id;
+	int id;
 	Constants.PacketType packetType;
 	int size;
 	Host srcHost;
 	Host dstHost;
 	String flowName;
+	int negPacketId = -1;
 
-	public Packet(String id, Constants.PacketType packetType, int size,
+	public Packet(int id, Constants.PacketType packetType, int size,
 			Host srcHost, Host dstHost, String flowName) {
 		this.id = id;
 		this.packetType = packetType;

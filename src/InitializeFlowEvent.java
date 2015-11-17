@@ -12,18 +12,22 @@ public class InitializeFlowEvent extends Event {
 	@Override
 	public List<Event> handle() {
 		flow.srcHost.currentFlows.put(flow.flowName, flow);
+		flow.dstHost.currentFlows.put(flow.flowName, flow);
 		List<Event> events = new ArrayList<Event>();
 
 		for (int i = 0; i < Math.min(flow.windowSize, flow.totalPackets); i++) {
-			Packet packet = new Packet("" + flow.maxPacketId,
+			Packet packet = new Packet(flow.maxPacketId,
 					Constants.PacketType.DATA, Constants.PACKET_SIZE,
 					flow.srcHost, flow.dstHost, flow.flowName);
 			flow.maxPacketId++;
-			flow.outgoingPackets.put(packet.id, packet);
+			flow.sendingBuffer.put(packet.id, packet);
+			flow.sendingTimes.put(packet.id, time);
 			Link link = flow.srcHost.links.values().iterator().next();
 			Component currentDst = link.getAdjacentEndpoint(flow.srcHost);
-			events.add(new SendPacketEvent(time + flow.maxPacketId / 100000.0,
-					packet, flow.srcHost, currentDst, link));
+			SendPacketEvent sendEvent = new SendPacketEvent(time, packet,
+					flow.srcHost, currentDst, link);
+			events.add(sendEvent);
+			events.add(new NegAckEvent(time + flow.rtt, packet, sendEvent));
 		}
 
 		return events;

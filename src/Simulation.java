@@ -36,9 +36,9 @@ public class Simulation {
 		// Begin simulation by popping from eventQueue until it is empty
 		int count = 0;
 		while (eventQueue.size() != 0) {
-			if(count >= 200)
-				break;
-			//System.out.println("Event Queue: " + eventQueue);
+			// if (count >= 300)
+			// break;
+			// System.out.println("Event Queue: " + eventQueue);
 			Event event = eventQueue.poll();
 			List<Event> newEvents = event.handle();
 			// If handling this event spawns new events, add them to the
