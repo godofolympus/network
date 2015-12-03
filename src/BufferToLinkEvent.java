@@ -19,6 +19,7 @@ public class BufferToLinkEvent extends Event {
 				+ ": Packet " + packet.id + ", " + "Time: " + time);
 		link.packets.poll();
 		link.directions.poll();
+		// Add ReceivePacketEvent based on direction
 		if (direction == Constants.Direction.RIGHT) {
 			newEvents.add(new ReceivePacketEvent(this.time + link.linkDelay,
 					packet, link.rightEndPoint));
@@ -26,6 +27,7 @@ public class BufferToLinkEvent extends Event {
 			newEvents.add(new ReceivePacketEvent(this.time + link.linkDelay,
 					packet, link.leftEndPoint));
 		}
+		// Add BufferToLinkEvent for next packet in buffer
 		if (link.packets.size() > 0) {
 			Packet nextPacket = link.packets.peek();
 			Constants.Direction nextDir = link.directions.peek();

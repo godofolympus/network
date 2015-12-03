@@ -32,11 +32,13 @@ public class Router extends Component {
 		if (distancesList == null) {
 			return false;
 		}
+		// For each neighbor that sent updated routing info process distances.
 		for (Link link : distancesList.keySet()) {
 			HashMap<String, Double> newDistances = distancesList.get(link);
 			for (String componentName : newDistances.keySet()) {
 				double newDist = link.linkDelay
 						+ newDistances.get(componentName);
+				// Dynamic programming step to update distance.
 				if (newDist < distances.get(componentName)) {
 					distances.put(componentName, newDist);
 					routing.put(componentName, link);
@@ -48,6 +50,7 @@ public class Router extends Component {
 	}
 
 	public void sendRoutingInfo() {
+		// Send distance vector to neighbors.
 		for (Link link : links.values()) {
 			Component adjComponent = link.getAdjacentEndpoint(this);
 			if (adjComponent instanceof Router) {

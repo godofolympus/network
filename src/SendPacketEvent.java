@@ -21,6 +21,7 @@ public class SendPacketEvent extends Event {
 		System.out.println("Sending " + packet.packetType + " Packet "
 				+ packet.id + " from " + src.name + " to " + packet.dstHost
 				+ ", Time: " + time);
+		// If buffer is not full then add packet to buffer.
 		if (link.currentBufferAmt < link.bufferSize - packet.size) {
 			Constants.Direction dir = null;
 			if (src.equals(link.leftEndPoint)) {

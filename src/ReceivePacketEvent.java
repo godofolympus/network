@@ -16,14 +16,18 @@ public class ReceivePacketEvent extends Event {
 				+ packet.id + " at " + component.name + " for "
 				+ packet.dstHost.name + ", Time: " + time);
 		if (component.name.equals(packet.dstHost.name)) {
+			// Packet has reached destination host.
 			Host host = (Host) component;
 			Flow flow = host.currentFlows.get(packet.flowName);
 			if (packet.packetType == Constants.PacketType.DATA) {
+				// If data packet then add packet into receiving buffer.
 				flow.receivingBuffer.put(packet.id, packet);
+				// Update receiving buffer window.
 				while (flow.receivingBuffer
 						.containsKey(flow.minUnacknowledgedPacketReceiver)) {
 					flow.minUnacknowledgedPacketReceiver++;
 				}
+				// Schedule ack packet.
 				System.out.println("New ACK Packet for Packet " + packet.id);
 				Packet ackPacket = new Packet(packet.id,
 						Constants.PacketType.ACK, Constants.ACK_SIZE, host,
@@ -34,12 +38,14 @@ public class ReceivePacketEvent extends Event {
 				newEvents.add(new SendPacketEvent(time, ackPacket, host,
 						currentDst, link));
 			} else if (packet.packetType == Constants.PacketType.ACK) {
+				// Remove packet from sending buffer if received ack packet.
 				if (flow.sendingBuffer.containsKey(packet.id)) {
 					flow.sendingBuffer.remove(packet.id);
 					flow.rtt = 0.5 * (time - flow.sendingTimes.get(packet.id))
 							+ 0.5 * flow.rtt + 0.0001;
 					flow.sendingTimes.remove(packet.id);
 				}
+				// Update sending buffer window.
 				flow.currentPackets++;
 				int nextUnacknowledgedPacket = packet.negPacketId;
 				boolean minChanged = flow.minUnacknowledgedPacketSender < nextUnacknowledgedPacket;
@@ -55,6 +61,7 @@ public class ReceivePacketEvent extends Event {
 				if (flow.currentPackets < flow.totalPackets)
 					System.out.println("Next Unacknowledged Packet: Packet "
 							+ flow.minUnacknowledgedPacketSender);
+				// Schedule new data packets to fill up window.
 				if (minChanged && flow.currentPackets < flow.totalPackets) {
 					while (flow.sendingBuffer.size() < flow.windowSize) {
 						Packet nextPacket = new Packet(flow.maxPacketId,

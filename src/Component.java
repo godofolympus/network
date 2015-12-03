@@ -1,6 +1,6 @@
-import java.util.ArrayList;
 import java.util.HashMap;
 
+// Superclass for hosts and routers
 public class Component {
 	String name;
 	HashMap<String, Link> links = new HashMap<String, Link>();

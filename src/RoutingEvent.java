@@ -21,6 +21,9 @@ public class RoutingEvent extends Event {
 		}
 		while (distancesChanged) {
 			distancesChanged = false;
+			/* For each router run an iteration of Bellman Ford, and if
+			 * distances have changed send info to neighbors.
+			 */
 			for (Router r : routers.values()) {
 				boolean changed = r.updateTable();
 				if (changed) {

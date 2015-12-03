@@ -16,10 +16,12 @@ public class InitializeFlowEvent extends Event {
 		List<Event> events = new ArrayList<Event>();
 
 		for (int i = 0; i < Math.min(flow.windowSize, flow.totalPackets); i++) {
+			// Add new SendPacketEvent
 			Packet packet = new Packet(flow.maxPacketId,
 					Constants.PacketType.DATA, Constants.PACKET_SIZE,
 					flow.srcHost, flow.dstHost, flow.flowName);
 			flow.maxPacketId++;
+			// Place packet in sending window buffer
 			flow.sendingBuffer.put(packet.id, packet);
 			flow.sendingTimes.put(packet.id, time);
 			Link link = flow.srcHost.links.values().iterator().next();
@@ -27,6 +29,7 @@ public class InitializeFlowEvent extends Event {
 			SendPacketEvent sendEvent = new SendPacketEvent(time, packet,
 					flow.srcHost, currentDst, link);
 			events.add(sendEvent);
+			// Schedule NegAckEvent if ack packet is not received
 			events.add(new NegAckEvent(time + flow.rtt, packet, sendEvent));
 		}
 
