@@ -14,6 +14,7 @@ public class Flow {
 	int maxPacketId = 0;
 	int minUnacknowledgedPacketSender = 0;
 	int minUnacknowledgedPacketReceiver = 0;
+	// TODO: sendingBuffer and receivingBuffer should be moved into host
 	HashMap<Integer, Packet> sendingBuffer = new HashMap<Integer, Packet>();
 	HashMap<Integer, Double> sendingTimes = new HashMap<Integer, Double>();
 	HashMap<Integer, Packet> receivingBuffer = new HashMap<Integer, Packet>();

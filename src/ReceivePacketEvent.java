@@ -10,6 +10,8 @@ public class ReceivePacketEvent extends Event {
 	}
 
 	@Override
+	// TODO: Potentially move some of this logic into other files
+	// TODO: Add comment
 	public List<Event> handle() {
 		ArrayList<Event> newEvents = new ArrayList<Event>();
 		System.out.println("Recieved " + packet.packetType + " Packet "

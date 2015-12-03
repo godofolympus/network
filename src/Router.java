@@ -49,6 +49,7 @@ public class Router extends Component {
 		return distancesChanged;
 	}
 
+	// TODO Change this to send packets to neighbors
 	public void sendRoutingInfo() {
 		// Send distance vector to neighbors.
 		for (Link link : links.values()) {

@@ -4,6 +4,13 @@ import java.util.PriorityQueue;
 import java.util.Scanner;
 
 public class Simulation {
+	// TODO: - Implement changes already mentioned as todos
+	// TODO: - Add dynamic shortest path finding
+	// TODO: - Implement two methods of congestion control
+	// TODO: - Add code that collects data from the entire network and save
+	// somewhere. Plot using matplotlib or some other library
+	// TODO: - Add more comments and structure code better
+	// TODO: - Test code
 
 	/**
 	 * @param args
@@ -23,6 +30,8 @@ public class Simulation {
 		PriorityQueue<Event> eventQueue = new PriorityQueue<Event>();
 
 		// Routing Table
+		// TODO Change this so that it happens dynamically throughout simulation
+		// of network
 		eventQueue.add(new RoutingEvent(-1, network.routers));
 
 		// Initialize eventQueue with initializeFlowEvent objects for

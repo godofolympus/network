@@ -16,6 +16,9 @@ public class SendPacketEvent extends Event {
 	}
 
 	@Override
+	// TODO: Modify this so that there are two buffers, one on either end
+	// To determine which one to send first, compare the top of the two buffers
+	// and choose the one that is scheduled first
 	public List<Event> handle() {
 		ArrayList<Event> newEvents = new ArrayList<Event>();
 		System.out.println("Sending " + packet.packetType + " Packet "
@@ -33,10 +36,11 @@ public class SendPacketEvent extends Event {
 				dir = Constants.Direction.LEFT;
 				link.directions.offer(dir);
 			}
+			// New BufferToLinkEvents are created by previous BufferToLinkEvent,
+			// so we need to create the first BufferToLinkEvent manually
 			if (link.packets.size() == 1) {
-				newEvents.add(new BufferToLinkEvent(
-						this.time + packet.size / link.linkRate, link, packet,
-						dir));
+				newEvents.add(new BufferToLinkEvent(this.time + packet.size
+						/ link.linkRate, link, packet, dir));
 			}
 			link.currentBufferAmt += packet.size;
 		}
