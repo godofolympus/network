@@ -63,6 +63,7 @@ public class Router extends Component {
 		}
 	}
 	
+	// TODO: Handle routing packets
 	public Event receivePacket(Double time, Packet packet) {
 		Link nextLink = this.routing.get(packet.dstHost.name);
 		Component nextDst = nextLink.getAdjacentEndpoint(this);
