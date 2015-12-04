@@ -14,23 +14,25 @@ public class ReceivePacketEvent extends Event {
 	// TODO: Add comment
 	public List<Event> handle() {
 		ArrayList<Event> newEvents = new ArrayList<Event>();
-		System.out.println("Recieved " + packet.packetType + " Packet "
-				+ packet.id + " at " + component.name + " for "
-				+ packet.dstHost.name + ", Time: " + time);
+
 		if (component.name.equals(packet.dstHost.name)) {
 			// Packet has reached destination host.
 			Host host = (Host) component;
 			Flow flow = host.currentFlows.get(packet.flowName);
+			
+			// Handle depending on what the packetType is
 			if (packet.packetType == Constants.PacketType.DATA) {
 				// If data packet then add packet into receiving buffer.
 				flow.receivingBuffer.put(packet.id, packet);
+				
 				// Update receiving buffer window.
 				while (flow.receivingBuffer
 						.containsKey(flow.minUnacknowledgedPacketReceiver)) {
 					flow.minUnacknowledgedPacketReceiver++;
 				}
-				// Schedule ack packet.
-				System.out.println("New ACK Packet for Packet " + packet.id);
+				
+				// Schedule acknowledgment packet to send back to src
+				//System.out.println("New ACK Packet for Packet " + packet.id);
 				Packet ackPacket = new Packet(packet.id,
 						Constants.PacketType.ACK, Constants.ACK_SIZE, host,
 						packet.srcHost, packet.flowName);
@@ -39,14 +41,17 @@ public class ReceivePacketEvent extends Event {
 				Component currentDst = link.getAdjacentEndpoint(host);
 				newEvents.add(new SendPacketEvent(time, ackPacket, host,
 						currentDst, link));
+				
 			} else if (packet.packetType == Constants.PacketType.ACK) {
 				// Remove packet from sending buffer if received ack packet.
+				// Update RTT time based on the time it took to arrive
 				if (flow.sendingBuffer.containsKey(packet.id)) {
 					flow.sendingBuffer.remove(packet.id);
 					flow.rtt = 0.5 * (time - flow.sendingTimes.get(packet.id))
 							+ 0.5 * flow.rtt + 0.0001;
 					flow.sendingTimes.remove(packet.id);
 				}
+				
 				// Update sending buffer window.
 				flow.currentPackets++;
 				int nextUnacknowledgedPacket = packet.negPacketId;
@@ -60,9 +65,11 @@ public class ReceivePacketEvent extends Event {
 					}
 					flow.minUnacknowledgedPacketSender++;
 				}
+				
 				if (flow.currentPackets < flow.totalPackets)
 					System.out.println("Next Unacknowledged Packet: Packet "
 							+ flow.minUnacknowledgedPacketSender);
+				
 				// Schedule new data packets to fill up window.
 				if (minChanged && flow.currentPackets < flow.totalPackets) {
 					while (flow.sendingBuffer.size() < flow.windowSize) {
@@ -93,6 +100,14 @@ public class ReceivePacketEvent extends Event {
 			newEvents.add(new SendPacketEvent(time, packet, component,
 					currentDst, nextLink));
 		}
+		
 		return newEvents;
+	}
+
+	public String toString() {
+		return super.toString()
+				+ "\t\t\tEvent Type: ReceivePacketEvent\t\t\tDetails: Receiving packet "
+				+ this.packet.flowName + "-" + this.packet.id + "-"
+				+ this.packet.packetType + " at comp " + this.component.name;
 	}
 }

@@ -16,15 +16,14 @@ public class SendPacketEvent extends Event {
 	}
 
 	@Override
-	// TODO: Modify this so that there are two buffers, one on either end
-	// To determine which one to send first, compare the top of the two buffers
-	// and choose the one that is scheduled first
+	// TODO: Check that the two buffer code is correct
 	public List<Event> handle() {
-		
+
 		ArrayList<Event> newEvents = new ArrayList<Event>();
 		Constants.Direction dir = null;
 
-		// Determine which direction this packet is traveling and if theres room on the corresponding buffer 
+		// Determine which direction this packet is traveling and if theres room
+		// on the corresponding buffer
 		if (src.equals(link.leftEndPoint)
 				&& (link.currentLeftBufferAmt + packet.size <= link.bufferSize)) {
 			// Place packet on the left buffer and change corresponding values
@@ -47,14 +46,14 @@ public class SendPacketEvent extends Event {
 			link.rightArrivalTimes.offer(time);
 			link.currentRightBufferAmt += packet.size;
 			dir = Constants.Direction.LEFT;
-			
+
 			// New BufferToLinkEvents are created by previous BufferToLinkEvent,
 			// so we need to create the first BufferToLinkEvent manually
 			if ((link.rightBuffer.size() + link.leftBuffer.size()) == 1) {
 				newEvents.add(new BufferToLinkEvent(this.time + packet.size
 						/ link.linkRate, link, packet, dir));
 			}
-			
+
 		} else {
 			// TODO: Handle case where packet is dropped
 		}
@@ -65,8 +64,10 @@ public class SendPacketEvent extends Event {
 
 	public String toString() {
 		return super.toString()
-				+ "\t\t\tEvent Type: SendPacketEvent\t\t\tDetails: Sending packet "
-				+ this.packet.id + " from comp " + this.src.name + " to comp "
-				+ this.dst.name + " over link " + this.link.linkName;
+				+ "\t\t\tEvent Type: SendPacketEvent\t\t\tDetails: Placing packet "
+				+ this.packet.flowName + "-" + this.packet.id + "-"
+				+ this.packet.packetType + " from " + this.src.name
+				+ " to " + this.dst.name + " on link "
+				+ this.link.linkName + "'s buffer";
 	}
 }

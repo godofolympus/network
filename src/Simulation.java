@@ -44,7 +44,7 @@ public class Simulation {
 
 		// Begin simulation by popping from eventQueue until it is empty
 		int count = 0;
-		int stopping_count = 20;
+		int stopping_count = 200;
 		
 		while (eventQueue.size() != 0) {
 			if (count >= stopping_count)
