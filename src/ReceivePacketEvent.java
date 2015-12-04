@@ -94,11 +94,10 @@ public class ReceivePacketEvent extends Event {
 				}
 			}
 		} else {
+			// Packet received at a router
 			Router router = (Router) component;
-			Link nextLink = router.routing.get(packet.dstHost.name);
-			Component currentDst = nextLink.getAdjacentEndpoint(component);
-			newEvents.add(new SendPacketEvent(time, packet, component,
-					currentDst, nextLink));
+			Event nextEvent = router.receivePacket(this.time, this.packet);
+			newEvents.add(nextEvent);
 		}
 		
 		return newEvents;

@@ -1,4 +1,6 @@
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class Router extends Component {
 	// HashMap<String, Link> links = new HashMap<String, Link>();
@@ -59,6 +61,12 @@ public class Router extends Component {
 				r.distancesList.put(link, distances);
 			}
 		}
+	}
+	
+	public Event receivePacket(Double time, Packet packet) {
+		Link nextLink = this.routing.get(packet.dstHost.name);
+		Component nextDst = nextLink.getAdjacentEndpoint(this);
+		return new SendPacketEvent(time, packet, this, nextDst, nextLink);
 	}
 
 }
