@@ -23,7 +23,7 @@ public abstract class Event implements Comparable<Event> {
 	}
 
 	public String toString() {
-		return "" + time;
+		return "Time: " + time;
 	}
 
 	public abstract List<Event> handle();

@@ -20,30 +20,53 @@ public class SendPacketEvent extends Event {
 	// To determine which one to send first, compare the top of the two buffers
 	// and choose the one that is scheduled first
 	public List<Event> handle() {
+		
 		ArrayList<Event> newEvents = new ArrayList<Event>();
-		System.out.println("Sending " + packet.packetType + " Packet "
-				+ packet.id + " from " + src.name + " to " + packet.dstHost
-				+ ", Time: " + time);
-		// If buffer is not full then add packet to buffer.
-		if (link.currentBufferAmt < link.bufferSize - packet.size) {
-			Constants.Direction dir = null;
-			if (src.equals(link.leftEndPoint)) {
-				link.packets.offer(packet);
-				dir = Constants.Direction.RIGHT;
-				link.directions.offer(dir);
-			} else {
-				link.packets.offer(packet);
-				dir = Constants.Direction.LEFT;
-				link.directions.offer(dir);
-			}
+		Constants.Direction dir = null;
+
+		// Determine which direction this packet is traveling and if theres room on the corresponding buffer 
+		if (src.equals(link.leftEndPoint)
+				&& (link.currentLeftBufferAmt + packet.size <= link.bufferSize)) {
+			// Place packet on the left buffer and change corresponding values
+			link.leftBuffer.offer(packet);
+			link.leftArrivalTimes.offer(time);
+			link.currentLeftBufferAmt += packet.size;
+			dir = Constants.Direction.RIGHT;
+
 			// New BufferToLinkEvents are created by previous BufferToLinkEvent,
 			// so we need to create the first BufferToLinkEvent manually
-			if (link.packets.size() == 1) {
+			if ((link.rightBuffer.size() + link.leftBuffer.size()) == 1) {
 				newEvents.add(new BufferToLinkEvent(this.time + packet.size
 						/ link.linkRate, link, packet, dir));
 			}
-			link.currentBufferAmt += packet.size;
+
+		} else if (src.equals(link.rightEndPoint)
+				&& (link.currentRightBufferAmt + packet.size <= link.bufferSize)) {
+			// Place packet on the right buffer and change corresponding values
+			link.rightBuffer.offer(packet);
+			link.rightArrivalTimes.offer(time);
+			link.currentRightBufferAmt += packet.size;
+			dir = Constants.Direction.LEFT;
+			
+			// New BufferToLinkEvents are created by previous BufferToLinkEvent,
+			// so we need to create the first BufferToLinkEvent manually
+			if ((link.rightBuffer.size() + link.leftBuffer.size()) == 1) {
+				newEvents.add(new BufferToLinkEvent(this.time + packet.size
+						/ link.linkRate, link, packet, dir));
+			}
+			
+		} else {
+			// TODO: Handle case where packet is dropped
 		}
+
+		// Return a list of events to add to the event priority queue
 		return newEvents;
+	}
+
+	public String toString() {
+		return super.toString()
+				+ "\t\t\tEvent Type: SendPacketEvent\t\t\tDetails: Sending packet "
+				+ this.packet.id + " from comp " + this.src.name + " to comp "
+				+ this.dst.name + " over link " + this.link.linkName;
 	}
 }

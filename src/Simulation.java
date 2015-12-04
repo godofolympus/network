@@ -17,7 +17,7 @@ public class Simulation {
 	 * @throws IOException
 	 */
 	public static void main(String[] args) throws IOException {
-		// Retrieve filename from user
+		// Retrieve filename from user through std input
 		System.out.print("Enter Filename for Test Case: ");
 		Scanner sc = new Scanner(System.in);
 		String filename = sc.next();
@@ -25,7 +25,7 @@ public class Simulation {
 
 		// Parse file and create Network object, containing details of the
 		// network architecture. Create the event priority queue for the
-		// simulation
+		// simulation. 
 		Network network = Network.parse(filename);
 		PriorityQueue<Event> eventQueue = new PriorityQueue<Event>();
 
@@ -44,12 +44,16 @@ public class Simulation {
 
 		// Begin simulation by popping from eventQueue until it is empty
 		int count = 0;
+		int stopping_count = 20;
+		
 		while (eventQueue.size() != 0) {
-			// if (count >= 300)
-			// break;
-			// System.out.println("Event Queue: " + eventQueue);
+			if (count >= stopping_count)
+				break;
+			
 			Event event = eventQueue.poll();
+			System.out.println(event);
 			List<Event> newEvents = event.handle();
+			
 			// If handling this event spawns new events, add them to the
 			// priority queue
 			if (newEvents != null) {
@@ -59,6 +63,8 @@ public class Simulation {
 			}
 			count++;
 		}
+		
+		System.out.println("Simulation concluded");
 	}
 
 }

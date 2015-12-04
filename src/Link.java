@@ -7,10 +7,14 @@ public class Link {
 	Component rightEndPoint;
 	double linkRate;
 	double linkDelay;
-	double currentBufferAmt;
+	double currentLeftBufferAmt;
+	double currentRightBufferAmt;
 	double bufferSize;
-	LinkedList<Packet> packets = new LinkedList<Packet>();
-	LinkedList<Constants.Direction> directions = new LinkedList<Constants.Direction>();
+	LinkedList<Packet> leftBuffer = new LinkedList<Packet>();
+	LinkedList<Packet> rightBuffer = new LinkedList<Packet>();
+	//LinkedList<Constants.Direction> directions = new LinkedList<Constants.Direction>();
+	LinkedList<Double> leftArrivalTimes = new LinkedList<Double>();
+	LinkedList<Double> rightArrivalTimes = new LinkedList<Double>();
 
 	public Link(String name, Component leftEndPoint, Component rightEndPoint,
 			double linkRate, double linkDelay, double bufferSize) {

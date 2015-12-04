@@ -13,29 +13,66 @@ public class BufferToLinkEvent extends Event {
 	}
 
 	@Override
+	// TODO: Does this consider link capacity at all?
+	// TODO: Is this half-duplex or full-duplex?
 	public List<Event> handle() {
+		
 		ArrayList<Event> newEvents = new ArrayList<Event>();
-		System.out.println("Buffer to Link Event at Link " + link.linkName
-				+ ": Packet " + packet.id + ", " + "Time: " + time);
-		link.packets.poll();
-		link.directions.poll();
-		// Add ReceivePacketEvent based on direction
-		if (direction == Constants.Direction.RIGHT) {
-			newEvents.add(new ReceivePacketEvent(this.time + link.linkDelay,
-					packet, link.rightEndPoint));
+		
+		// Handle transfer of the packet depending on direction
+		if (direction == Constants.Direction.RIGHT){
+			link.leftBuffer.poll();
+			newEvents.add(new ReceivePacketEvent(this.time + link.linkDelay, packet, link.rightEndPoint));
+			link.currentLeftBufferAmt -= packet.size;
 		} else {
-			newEvents.add(new ReceivePacketEvent(this.time + link.linkDelay,
-					packet, link.leftEndPoint));
+			link.rightBuffer.poll();
+			newEvents.add(new ReceivePacketEvent(this.time + link.linkDelay, packet, link.leftEndPoint));
+			link.currentRightBufferAmt -= packet.size;
 		}
-		// Add BufferToLinkEvent for next packet in buffer
-		if (link.packets.size() > 0) {
-			Packet nextPacket = link.packets.peek();
-			Constants.Direction nextDir = link.directions.peek();
-			newEvents.add(new BufferToLinkEvent(
-					this.time + nextPacket.size / link.linkRate, link,
-					nextPacket, nextDir));
+		
+		// If at least one packet is waiting to be sent, schedule the next BufferToLinkEvent
+		if (!(link.leftBuffer.isEmpty() && link.rightBuffer.isEmpty())) {
+			Constants.Direction nextDir;
+			Packet nextPacket;
+			
+			if (link.leftBuffer.isEmpty()) {
+				// Left buffer is empty, choose the packet on the right
+				nextDir = Constants.Direction.LEFT;
+				nextPacket = link.rightBuffer.peek();
+			} else if (link.rightBuffer.isEmpty()) {
+				// Right buffer is empty, choose the packet on the left
+				nextDir = Constants.Direction.RIGHT;
+				nextPacket = link.leftBuffer.peek();
+			} else {
+				// Both buffers have elements, choose the packet that arrived first
+				double leftTime = link.leftArrivalTimes.peek();
+				double rightTime = link.rightArrivalTimes.peek();
+				
+				if (leftTime < rightTime) {
+					nextDir = Constants.Direction.RIGHT;
+					nextPacket = link.leftBuffer.peek();
+				} else {
+					nextDir = Constants.Direction.LEFT;
+					nextPacket = link.rightBuffer.peek();
+				}
+			}
+			
+			// Schedule the next BufferToLinkEvent based on the previous info
+			newEvents.add(new BufferToLinkEvent(this.time + nextPacket.size / link.linkRate, link, nextPacket, nextDir));
 		}
-		link.currentBufferAmt -= packet.size;
+		
 		return newEvents;
+	}
+	
+	public String toString() {
+		if (this.direction == Constants.Direction.RIGHT) {
+			return super.toString() + "\t\t\tEvent Type: BufferToLinkEvent\t\t\tDetails: Sending packet "
+					+ this.packet.id + " from comp " + this.link.leftEndPoint.name + " to comp "
+					+ this.link.rightEndPoint.name + " over link " + this.link.linkName;
+		} else {
+			return super.toString() + "\t\t\tEvent Type: BufferToLinkEvent\t\t\tDetails: Sending packet "
+					+ this.packet.id + " from comp " + this.link.rightEndPoint.name + " to comp "
+					+ this.link.leftEndPoint.name + " over link " + this.link.linkName;
+		}
 	}
 }
