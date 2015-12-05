@@ -43,43 +43,45 @@ public class Simulation {
 			eventQueue.add(flowEvent);
 		}
 
-		// Begin simulation by popping from eventQueue until it is empty
+		// Define variables to use during simulation
 		int eventCount = 0;
 		int dataCollectionFreq = 100;
-		int stopping_count = 2000000;
+		int stopping_count = 200;
 		double prevTime = 0.0;
 
+		// Begin simulation by popping from eventQueue until it is empty
 		while (eventQueue.size() != 0) {
+			// TODO: Remove stopping count before submitting
 			if (eventCount > stopping_count)
 				break;
 
+			// Pull next event and print out its information
 			Event event = eventQueue.poll();
-			//System.out.println(event);
+			System.out.println(event);
 
-			// Collect data after pulling dataCollectionFreq events from the
-			// priority queue
+			// Collect data after handling a given number of events
 			if (eventCount % dataCollectionFreq == 0) {
 				prevTime = dataCollector.collectData(prevTime, event.time);
 			}
-
+			
+			// Call the event handler
 			List<Event> newEvents = event.handle();
 
 			// If handling this event spawns new events, add them to the
 			// priority queue
 			if (newEvents != null) {
-				for (Event newEvent : newEvents) {
-					eventQueue.add(newEvent);
-				}
+				eventQueue.addAll(newEvents);
 			}
+
 			eventCount++;
 		}
 
 		System.out.println("Simulation concluded");
-		
+
 		// Print out contents of dataCollector object
-		for (DataElement element : dataCollector.dataList) {
-			System.out.println(element.linkDataList.get("L1"));
-		}
+		// for (DataElement element : dataCollector.dataList) {
+		// System.out.println(element.linkDataList.get("L1"));
+		// }
 	}
 
 }

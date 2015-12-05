@@ -67,9 +67,9 @@ public class Host extends Component {
 				flow.minUnacknowledgedPacketSender++;
 			}
 			
-			if (flow.currentPackets < flow.totalPackets)
-				System.out.println("Next Unacknowledged Packet: Packet "
-						+ flow.minUnacknowledgedPacketSender);
+//			if (flow.currentPackets < flow.totalPackets)
+//				System.out.println("Next Unacknowledged Packet: Packet "
+//						+ flow.minUnacknowledgedPacketSender);
 			
 			// Schedule new data packets to fill up window.
 			if (minChanged && flow.currentPackets < flow.totalPackets) {
@@ -78,7 +78,7 @@ public class Host extends Component {
 							Constants.PacketType.DATA,
 							Constants.PACKET_SIZE, flow.srcHost,
 							flow.dstHost, flow.flowName);
-					System.out.println("New DATA Packet " + nextPacket.id);
+//					System.out.println("New DATA Packet " + nextPacket.id);
 					flow.maxPacketId++;
 					flow.sendingBuffer.put(nextPacket.id, nextPacket);
 					flow.sendingTimes.put(nextPacket.id, time);
