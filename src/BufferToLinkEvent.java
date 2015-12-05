@@ -23,12 +23,12 @@ public class BufferToLinkEvent extends Event {
 		if (direction == Constants.Direction.RIGHT) {
 			link.leftBuffer.poll();
 			newEvents.add(new ReceivePacketEvent(this.time + link.linkDelay,
-					packet, link.rightEndPoint));
+					packet, link.rightEndPoint, link));
 			link.currentLeftBufferAmt -= packet.size;
 		} else {
 			link.rightBuffer.poll();
 			newEvents.add(new ReceivePacketEvent(this.time + link.linkDelay,
-					packet, link.leftEndPoint));
+					packet, link.leftEndPoint, link));
 			link.currentRightBufferAmt -= packet.size;
 		}
 
@@ -37,15 +37,18 @@ public class BufferToLinkEvent extends Event {
 		if (!(link.leftBuffer.isEmpty() && link.rightBuffer.isEmpty())) {
 			Constants.Direction nextDir;
 			Packet nextPacket;
+			double delay;
 
 			if (link.leftBuffer.isEmpty()) {
 				// Left buffer is empty, choose the packet on the right
 				nextDir = Constants.Direction.LEFT;
 				nextPacket = link.rightBuffer.peek();
+
 			} else if (link.rightBuffer.isEmpty()) {
 				// Right buffer is empty, choose the packet on the left
 				nextDir = Constants.Direction.RIGHT;
 				nextPacket = link.leftBuffer.peek();
+
 			} else {
 				// Both buffers have elements, choose the packet that arrived
 				// first
@@ -61,9 +64,18 @@ public class BufferToLinkEvent extends Event {
 				}
 			}
 
+			// If the next packet is going the same direction, then we only
+			// consider propagation delay. If we are changing directions, then
+			// we also need to consider link delay.
+			if (nextDir == direction) {
+				delay = nextPacket.size / link.linkRate;
+			} else {
+				delay = link.linkDelay + nextPacket.size / link.linkRate;
+			}
+
 			// Schedule the next BufferToLinkEvent based on the previous info
-			newEvents.add(new BufferToLinkEvent(this.time + nextPacket.size
-					/ link.linkRate, link, nextPacket, nextDir));
+			newEvents.add(new BufferToLinkEvent(this.time + delay, link,
+					nextPacket, nextDir));
 		}
 
 		// Return a list of events to add to the event priority queue

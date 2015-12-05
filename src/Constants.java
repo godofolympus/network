@@ -3,7 +3,7 @@
  * interpreted in bytes. 
  */
 public class Constants {
-	public static int DEFAULT_WINDOW_SIZE = 10;
+	public static int DEFAULT_WINDOW_SIZE = 500;
 	public static int PACKET_SIZE = 1024;
 	public static int ACK_SIZE = 64;
 

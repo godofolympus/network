@@ -6,7 +6,7 @@ public class Flow {
 	Host dstHost;
 	double dataAmount;
 	double startTime;
-	double rtt = 0.1;
+	double rtt = 0.02;
 
 	int windowSize;
 	int totalPackets;

@@ -12,9 +12,12 @@ public class Link {
 	double bufferSize;
 	LinkedList<Packet> leftBuffer = new LinkedList<Packet>();
 	LinkedList<Packet> rightBuffer = new LinkedList<Packet>();
-	//LinkedList<Constants.Direction> directions = new LinkedList<Constants.Direction>();
 	LinkedList<Double> leftArrivalTimes = new LinkedList<Double>();
 	LinkedList<Double> rightArrivalTimes = new LinkedList<Double>();
+	
+	// Used by DataCollector to plot data
+	int packetsLost;
+	int bytesSent;
 
 	public Link(String name, Component leftEndPoint, Component rightEndPoint,
 			double linkRate, double linkDelay, double bufferSize) {

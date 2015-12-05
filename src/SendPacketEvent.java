@@ -55,7 +55,8 @@ public class SendPacketEvent extends Event {
 			}
 
 		} else {
-			// TODO: Handle case where packet is dropped
+			// Handle case where packet is dropped
+			link.packetsLost++;
 		}
 
 		// Return a list of events to add to the event priority queue

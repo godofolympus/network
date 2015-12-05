@@ -25,8 +25,9 @@ public class Simulation {
 
 		// Parse file and create Network object, containing details of the
 		// network architecture. Create the event priority queue for the
-		// simulation. 
+		// simulation.
 		Network network = Network.parse(filename);
+		DataCollector dataCollector = new DataCollector(network);
 		PriorityQueue<Event> eventQueue = new PriorityQueue<Event>();
 
 		// Routing Table
@@ -43,17 +44,26 @@ public class Simulation {
 		}
 
 		// Begin simulation by popping from eventQueue until it is empty
-		int count = 0;
-		int stopping_count = 200;
-		
+		int eventCount = 0;
+		int dataCollectionFreq = 100;
+		int stopping_count = 2000000;
+		double prevTime = 0.0;
+
 		while (eventQueue.size() != 0) {
-			if (count >= stopping_count)
+			if (eventCount > stopping_count)
 				break;
-			
+
 			Event event = eventQueue.poll();
-			System.out.println(event);
+			//System.out.println(event);
+
+			// Collect data after pulling dataCollectionFreq events from the
+			// priority queue
+			if (eventCount % dataCollectionFreq == 0) {
+				prevTime = dataCollector.collectData(prevTime, event.time);
+			}
+
 			List<Event> newEvents = event.handle();
-			
+
 			// If handling this event spawns new events, add them to the
 			// priority queue
 			if (newEvents != null) {
@@ -61,10 +71,15 @@ public class Simulation {
 					eventQueue.add(newEvent);
 				}
 			}
-			count++;
+			eventCount++;
 		}
-		
+
 		System.out.println("Simulation concluded");
+		
+		// Print out contents of dataCollector object
+		for (DataElement element : dataCollector.dataList) {
+			System.out.println(element.linkDataList.get("L1"));
+		}
 	}
 
 }
