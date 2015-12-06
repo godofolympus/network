@@ -11,6 +11,6 @@ public class FlowData {
 
 	public String toString() {
 		return "sendRate: " + sendRate + "\treceieveRate: " + receiveRate
-				+ "rtt: " + rtt;
+				+ " rtt: " + rtt;
 	}
 }

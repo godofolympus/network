@@ -41,11 +41,15 @@ public class DataCollector {
 		for (Flow flow : network.flows.values()) {
 			
 			// Collect flow data
-			double sendRate = 0.0;
-			double recRate = 0.0; 
-			double rtt = 0.0;
+			double sendRate = flow.bytesSent / (currentTime - prevTime);
+			double recRate = flow.bytesReceived / (currentTime - prevTime); 
+			double rtt = flow.rttSum / flow.acksReceived;
 			
 			// Reset data
+			flow.bytesSent = 0;
+			flow.bytesReceived = 0;
+			flow.rttSum = 0.0;
+			flow.acksReceived = 0;
 			
 			// Create new FlowData element and put it in our DataElement
 			FlowData flowData = new FlowData(sendRate, recRate, rtt);
@@ -56,10 +60,12 @@ public class DataCollector {
 		for (Host host : network.hosts.values()) {
 			
 			// Collect host data
-			double sendRate = 0.0;
-			double recRate = 0.0;
+			double sendRate = host.bytesSent / (currentTime - prevTime);
+			double recRate = host.bytesReceived / (currentTime - prevTime);
 			
 			// Reset data
+			host.bytesSent = 0;
+			host.bytesReceived = 0;
 			
 			// Create new HostData element
 			HostData hostData = new HostData(sendRate, recRate);

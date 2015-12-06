@@ -19,8 +19,24 @@ public class SendPacketEvent extends Event {
 	// TODO: Check that the two buffer code is correct
 	public List<Event> handle() {
 
+		// Declare variables for newEvents and direction
 		ArrayList<Event> newEvents = new ArrayList<Event>();
 		Constants.Direction dir = null;
+
+		// If this SendPacketEvent object is being sent from the srcHost
+		// then update the host sendRate. If it is also a data packet, then
+		// also update the flow sendRate
+		if (src.name.equals(packet.srcHost.name)) {
+			Host host = (Host) src;
+			Flow flow = host.currentFlows.get(packet.flowName);
+			
+			if (packet.packetType == Constants.PacketType.DATA) {
+				host.bytesSent += Constants.PACKET_SIZE;
+				flow.bytesSent += Constants.PACKET_SIZE;
+			} else {
+				host.bytesSent += Constants.ACK_SIZE;
+			}
+		}
 
 		// Determine which direction this packet is traveling and if theres room
 		// on the corresponding buffer
@@ -67,8 +83,8 @@ public class SendPacketEvent extends Event {
 		return super.toString()
 				+ "\t\t\tEvent Type: SendPacketEvent\t\t\tDetails: Placing packet "
 				+ this.packet.flowName + "-" + this.packet.id + "-"
-				+ this.packet.packetType + " from " + this.src.name
-				+ " to " + this.dst.name + " on link "
-				+ this.link.linkName + "'s buffer";
+				+ this.packet.packetType + " from " + this.src.name + " to "
+				+ this.dst.name + " on link " + this.link.linkName
+				+ "'s buffer";
 	}
 }

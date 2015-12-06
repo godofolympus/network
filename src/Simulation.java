@@ -46,7 +46,7 @@ public class Simulation {
 		// Define variables to use during simulation
 		int eventCount = 0;
 		int dataCollectionFreq = 100;
-		int stopping_count = 200;
+		int stopping_count = 300;
 		double prevTime = 0.0;
 
 		// Begin simulation by popping from eventQueue until it is empty
@@ -78,10 +78,13 @@ public class Simulation {
 
 		System.out.println("Simulation concluded");
 
-		// Print out contents of dataCollector object
-		// for (DataElement element : dataCollector.dataList) {
-		// System.out.println(element.linkDataList.get("L1"));
-		// }
+		 //Print out contents of dataCollector object
+		 for (DataElement element : dataCollector.dataList) {
+			 System.out.println(element.linkDataList);
+			 System.out.println(element.flowDataList);
+			 System.out.println(element.hostDataList);
+			 System.out.println();
+		 }
 	}
 
 }

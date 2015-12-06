@@ -4,6 +4,10 @@ import java.util.List;
 
 public class Host extends Component {
 	HashMap<String, Flow> currentFlows = new HashMap<String, Flow>();
+	
+	// Variables for data collection
+	int bytesSent = 0;
+	int bytesReceived = 0;
 
 	public Host(String name) {
 		super(name);

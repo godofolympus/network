@@ -18,6 +18,12 @@ public class Flow {
 	HashMap<Integer, Packet> sendingBuffer = new HashMap<Integer, Packet>();
 	HashMap<Integer, Double> sendingTimes = new HashMap<Integer, Double>();
 	HashMap<Integer, Packet> receivingBuffer = new HashMap<Integer, Packet>();
+	
+	// Variables used to store sendRate and receiveRate data
+	int bytesSent = 0;
+	int bytesReceived = 0;
+	double rttSum = 0;
+	int acksReceived = 0;
 
 	public Flow(String name, Host src, Host dest, double amt, double time) {
 		this.flowName = name;
