@@ -6,7 +6,7 @@ public class Flow {
 	Host dstHost;
 	double dataAmount;
 	double startTime;
-	double rtt = 0.02;
+	double rtt = 0.1;
 
 	int windowSize;
 	int totalPackets;
@@ -16,7 +16,7 @@ public class Flow {
 	int minUnacknowledgedPacketReceiver = 0;
 	// TODO: sendingBuffer and receivingBuffer should be moved into host
 	HashMap<Integer, Packet> sendingBuffer = new HashMap<Integer, Packet>();
-	HashMap<Integer, Double> sendingTimes = new HashMap<Integer, Double>();
+	//HashMap<Integer, Double> sendingTimes = new HashMap<Integer, Double>();
 	HashMap<Integer, Packet> receivingBuffer = new HashMap<Integer, Packet>();
 	
 	// Variables used to store sendRate and receiveRate data

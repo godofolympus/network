@@ -42,6 +42,7 @@ public class Host extends Component {
 					Constants.PacketType.ACK, Constants.ACK_SIZE, this,
 					packet.srcHost, packet.flowName);
 			ackPacket.negPacketId = flow.minUnacknowledgedPacketReceiver;
+			ackPacket.dataSendingTime = packet.dataSendingTime;
 			Link link = this.links.values().iterator().next();
 			Component currentDst = link.getAdjacentEndpoint(this);
 			newEvents.add(new SendPacketEvent(time, ackPacket, this,
@@ -50,12 +51,8 @@ public class Host extends Component {
 		} else if (packet.packetType == Constants.PacketType.ACK) {
 			// Remove packet from sending buffer if received ack packet.
 			// Update RTT time based on the time it took to arrive
-			if (flow.sendingBuffer.containsKey(packet.id)) {
-				flow.sendingBuffer.remove(packet.id);
-				flow.rtt = 0.5 * (time - flow.sendingTimes.get(packet.id))
-						+ 0.5 * flow.rtt + 0.0001;
-				flow.sendingTimes.remove(packet.id);
-			}
+			flow.rtt = 0.5 * (time - packet.dataSendingTime)
+					+ 0.5 * flow.rtt + 0.0001;
 			
 			// Update sending buffer window.
 			flow.currentPackets++;
@@ -85,7 +82,6 @@ public class Host extends Component {
 //					System.out.println("New DATA Packet " + nextPacket.id);
 					flow.maxPacketId++;
 					flow.sendingBuffer.put(nextPacket.id, nextPacket);
-					flow.sendingTimes.put(nextPacket.id, time);
 					Link link = flow.srcHost.links.values().iterator()
 							.next();
 					Component currentDst = link

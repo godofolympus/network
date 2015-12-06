@@ -31,6 +31,7 @@ public class SendPacketEvent extends Event {
 			Flow flow = host.currentFlows.get(packet.flowName);
 			
 			if (packet.packetType == Constants.PacketType.DATA) {
+				packet.dataSendingTime = time;
 				host.bytesSent += Constants.PACKET_SIZE;
 				flow.bytesSent += Constants.PACKET_SIZE;
 			} else {
@@ -50,7 +51,7 @@ public class SendPacketEvent extends Event {
 
 			// New BufferToLinkEvents are created by previous BufferToLinkEvent,
 			// so we need to create the first BufferToLinkEvent manually
-			if ((link.rightBuffer.size() + link.leftBuffer.size()) == 1) {
+			if ( link.leftBuffer.size() == 1) {
 				newEvents.add(new BufferToLinkEvent(this.time + packet.size
 						/ link.linkRate, link, packet, dir));
 			}
@@ -65,7 +66,7 @@ public class SendPacketEvent extends Event {
 
 			// New BufferToLinkEvents are created by previous BufferToLinkEvent,
 			// so we need to create the first BufferToLinkEvent manually
-			if ((link.rightBuffer.size() + link.leftBuffer.size()) == 1) {
+			if (link.rightBuffer.size() == 1) {
 				newEvents.add(new BufferToLinkEvent(this.time + packet.size
 						/ link.linkRate, link, packet, dir));
 			}

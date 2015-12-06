@@ -43,14 +43,12 @@ public class ReceivePacketEvent extends Event {
 				// ack packets in Host deletes from the sendingTimes HashMap when
 				// it receives an ack packet.
 				host.bytesReceived += Constants.ACK_SIZE;
-				if (flow.sendingTimes.get(packet.id) != null) {
-					flow.rttSum += time - flow.sendingTimes.get(packet.id);
-					flow.acksReceived++;
-				}
+				flow.rttSum += time - packet.dataSendingTime;
+				flow.acksReceived++;
 			} else {
 				// TODO: Handle other cases
 			}
-			
+
 			// Handle the package appropriately
 			newEvents.addAll(host.receivePacket(this.time, this.packet));
 

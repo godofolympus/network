@@ -26,7 +26,6 @@ public class InitializeFlowEvent extends Event {
 
 			// Place packet/time in respective buffer
 			flow.sendingBuffer.put(packet.id, packet);
-			flow.sendingTimes.put(packet.id, time);
 
 			// Retrieve the single link connected to src host and the adjacent
 			// component
