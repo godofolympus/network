@@ -72,6 +72,23 @@ public class Network {
 			flows.put(flowName, new Flow(flowName, hosts.get(src),
 					hosts.get(dst), amt * 1000 * 1000, time));
 		}
+		
+		for (int i = 0; i < F; i++) {
+			String flowName = sc.next();
+			String tcp = sc.next();
+			
+			if (tcp.equals("TAHOE")) {
+				Flow flow = flows.get(flowName);
+				flow.tcp = Constants.TCP.TAHOE;
+				flow.windowSize = 2.0;
+				flow.slowStartThresh = 1000;
+				
+			} else if (tcp.equals("RENO")) {
+				// TODO: Finish this
+			} else if (tcp.equals("FAST")) {
+				// TODO: Finish this
+			}
+		}
 
 		sc.close();
 		return new Network(hosts, routers, links, flows);

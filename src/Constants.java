@@ -4,6 +4,7 @@
  */
 public class Constants {
 	public static int DEFAULT_WINDOW_SIZE = 10;
+	public static TCP DEFAULT_TCP = TCP.TAHOE;
 	public static int PACKET_SIZE = 1024;
 	public static int ACK_SIZE = 64;
 	
@@ -11,12 +12,19 @@ public class Constants {
 	public static String[] linkFields = {"occupancyData", "packetsLost", "flowRate"};
 	public static String[] flowFields = {"sendRate", "receiveRate", "rtt", "windowSize"};
 
+	
 	// Packet types
 	public enum PacketType {
 		DATA, ACK
 	}
 
+	// Direction types
 	public enum Direction {
 		RIGHT, LEFT
+	}
+	
+	// TCP Congestion Control Types
+	public enum TCP {
+		TAHOE, RENO, FAST
 	}
 }

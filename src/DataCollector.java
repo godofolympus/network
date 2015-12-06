@@ -43,13 +43,15 @@ public class DataCollector {
 			double sendRate = flow.bytesSent / (currentTime - prevTime);
 			double recRate = flow.bytesReceived / (currentTime - prevTime); 
 			double rtt = flow.rttSum / flow.acksReceived;
-			int windowSize = flow.windowSize;
+			double windowSize = flow.windowSizeSum / flow.windowChangedCount;
 			
 			// Reset data
 			flow.bytesSent = 0;
 			flow.bytesReceived = 0;
 			flow.rttSum = 0.0;
 			flow.acksReceived = 0;
+			flow.windowSizeSum = 0.0;
+			flow.windowChangedCount = 0;
 			
 			// Add to data element
 			dataElement.addFlowData(flow.flowName, sendRate, recRate, rtt, windowSize);

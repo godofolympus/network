@@ -45,8 +45,8 @@ public class Simulation {
 
 		// Define variables to use during simulation
 		int eventCount = 0;
-		int dataCollectionFreq = 500;
-		int stopping_count = 1000000;
+		int dataCollectionFreq = 50;
+		int stopping_count = 200;
 		double prevTime = 0.0;
 
 		// Begin simulation by popping from eventQueue until it is empty

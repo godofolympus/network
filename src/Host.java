@@ -74,7 +74,7 @@ public class Host extends Component {
 			
 			// Schedule new data packets to fill up window.
 			if (minChanged && flow.currentPackets < flow.totalPackets) {
-				while (flow.sendingBuffer.size() < flow.windowSize) {
+				while (flow.sendingBuffer.size() < Math.floor(flow.windowSize)) {
 					Packet nextPacket = new Packet(flow.maxPacketId,
 							Constants.PacketType.DATA,
 							Constants.PACKET_SIZE, flow.srcHost,

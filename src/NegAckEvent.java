@@ -16,11 +16,26 @@ public class NegAckEvent extends Event {
 		Host srcHost = (Host) sendEvent.src;
 		Flow flow = srcHost.currentFlows.get(packet.flowName);
 
-		// If Packet is still in the sending buffer then an ack packet has not
+		// If packet is still in the sending buffer then an ack packet has not
 		// been received, and so re-send the packet.
 		if (flow.sendingBuffer.containsKey(packet.id)) {
 			newEvents.add(new SendPacketEvent(time, packet, flow.srcHost,
 					sendEvent.dst, sendEvent.link));
+			
+			// Handle a missed ack packet depending on the tcp algorithm
+			switch(flow.tcp) {
+			case TAHOE:
+				flow.slowStartThresh = Math.min(1, (int) (flow.windowSize / 2.0));
+				flow.windowSize = 1.0;
+				break;
+			case RENO:
+				break;
+			case FAST:
+				break;
+			}
+			
+			flow.windowSizeSum += flow.windowSize;
+			flow.windowChangedCount++;
 		}
 
 		// Return a list of events to add to the event priority queue

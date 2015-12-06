@@ -7,8 +7,11 @@ public class Flow {
 	double dataAmount;
 	double startTime;
 	double rtt = 0.1;
+	
+	Constants.TCP tcp;
+	int slowStartThresh;
 
-	int windowSize;
+	double windowSize;
 	int totalPackets;
 	int currentPackets = 0;
 	int maxPacketId = 0;
@@ -19,11 +22,14 @@ public class Flow {
 	//HashMap<Integer, Double> sendingTimes = new HashMap<Integer, Double>();
 	HashMap<Integer, Packet> receivingBuffer = new HashMap<Integer, Packet>();
 	
+
 	// Variables used to store sendRate and receiveRate data
 	int bytesSent = 0;
 	int bytesReceived = 0;
-	double rttSum = 0;
+	double rttSum = 0.0;
 	int acksReceived = 0;
+	double windowSizeSum = 0.0;
+	int windowChangedCount = 0;
 
 	public Flow(String name, Host src, Host dest, double amt, double time) {
 		this.flowName = name;

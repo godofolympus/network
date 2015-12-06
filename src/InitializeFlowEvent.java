@@ -17,7 +17,7 @@ public class InitializeFlowEvent extends Event {
 		List<Event> events = new ArrayList<Event>();
 
 		// Set up the first few packets to send
-		for (int i = 0; i < Math.min(flow.windowSize, flow.totalPackets); i++) {
+		for (int i = 0; i < Math.min(Math.floor(flow.windowSize), flow.totalPackets); i++) {
 			// Create new Packet object based on flow information
 			Packet packet = new Packet(flow.maxPacketId,
 					Constants.PacketType.DATA, Constants.PACKET_SIZE,
