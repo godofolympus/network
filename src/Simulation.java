@@ -1,4 +1,6 @@
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Scanner;
@@ -45,8 +47,8 @@ public class Simulation {
 
 		// Define variables to use during simulation
 		int eventCount = 0;
-		int dataCollectionFreq = 100;
-		int stopping_count = 1000000000;
+		int dataCollectionFreq = 1000;
+		int stopping_count = 1000000;
 		double prevTime = 0.0;
 
 		// Begin simulation by popping from eventQueue until it is empty
@@ -63,7 +65,7 @@ public class Simulation {
 			if (eventCount % dataCollectionFreq == 0) {
 				prevTime = dataCollector.collectData(prevTime, event.time);
 			}
-			
+
 			// Call the event handler
 			List<Event> newEvents = event.handle();
 
@@ -78,13 +80,63 @@ public class Simulation {
 
 		System.out.println("Simulation concluded");
 
-		 //Print out contents of dataCollector object
-		 for (DataElement element : dataCollector.dataList) {
-			 System.out.println(element.linkDataList);
-			 System.out.println(element.flowDataList);
-			 System.out.println(element.hostDataList);
-			 System.out.println();
-		 }
+		// Collect data in proper format
+		ArrayList<Double> timeList = new ArrayList<Double>();
+		HashMap<String, ArrayList<Double>> hostData = new HashMap<String, ArrayList<Double>>();
+		HashMap<String, ArrayList<Double>> linkData = new HashMap<String, ArrayList<Double>>();
+		HashMap<String, ArrayList<Double>> flowData = new HashMap<String, ArrayList<Double>>();
+
+		for (DataElement element : dataCollector.dataList) {
+			// Add the time element
+			timeList.add((element.endTime +  element.startTime) / 2);
+
+			// Iterate over hosts
+			for (String field : element.hostDataList.keySet()) {
+				if (!hostData.containsKey(field)) {
+					hostData.put(field, new ArrayList<Double>());
+				}
+
+				hostData.get(field).add(element.hostDataList.get(field));
+			}
+
+			// Iterate over links
+			for (String field : element.linkDataList.keySet()) {
+				if (!linkData.containsKey(field)) {
+					linkData.put(field, new ArrayList<Double>());
+				}
+
+				linkData.get(field).add(element.linkDataList.get(field));
+			}
+
+			// Iterate over flows
+			for (String field : element.flowDataList.keySet()) {
+				if (!flowData.containsKey(field)) {
+					flowData.put(field, new ArrayList<Double>());
+				}
+
+				flowData.get(field).add(element.flowDataList.get(field));
+			}
+		}
+
+		// Plot the data that we collected
+		// Iterate over hosts
+		for (String field : hostData.keySet()) {
+			ArrayList<Double> fieldValues = hostData.get(field);
+			Graph.plot(field, "time (seconds)", field.substring(field.indexOf('-') + 1), null, timeList, fieldValues, null);
+		}
+
+		// Iterate over links
+		for (String field : linkData.keySet()) {
+			ArrayList<Double> fieldValues = linkData.get(field);
+			Graph.plot(field, "time (seconds)", field.substring(field.indexOf('-') + 1), null, timeList, fieldValues, null);
+		}
+
+		// Iterate over flows
+		for (String field : flowData.keySet()) {
+			ArrayList<Double> fieldValues = flowData.get(field);
+			Graph.plot(field, "time (seconds)", field.substring(field.indexOf('-') + 1), null, timeList, fieldValues, null);
+		}
+
 	}
 
 }
