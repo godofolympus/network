@@ -1,18 +1,27 @@
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 public class NegAckEvent extends Event {
 	SendPacketEvent sendEvent;
+	String windowId = "";
+	static HashSet<String> windowIds = new HashSet<String>();
 
-	public NegAckEvent(double time, Packet packet, SendPacketEvent sendEvent) {
+	public NegAckEvent(double time, Packet packet, SendPacketEvent sendEvent, String windowId) {
 		super(time, packet);
 		this.sendEvent = sendEvent;
+		this.windowId = windowId;
 	}
 
 	@Override
 	public List<Event> handle() {
-
 		ArrayList<Event> newEvents = new ArrayList<Event>();
+		if(windowIds.contains(windowId)){
+			return newEvents;
+		}
+		else{
+			windowIds.add(windowId);
+		}
 		Host srcHost = (Host) sendEvent.src;
 		Flow flow = srcHost.currentFlows.get(packet.flowName);
 
@@ -33,7 +42,7 @@ public class NegAckEvent extends Event {
 			case FAST:
 				break;
 			}
-			
+
 			flow.windowSizeSum += flow.windowSize;
 			flow.windowChangedCount++;
 		}
