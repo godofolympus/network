@@ -39,7 +39,7 @@ public class InitializeFlowEvent extends Event {
 
 			// Schedule NegAckEvent to handle any packets that have not been
 			// acknowledged within one RTT
-			events.add(new NegAckEvent(time + flow.rtt, packet, sendEvent, flow.flowName + "," + 0));
+			events.add(new NegAckEvent(time + flow.rtt, packet, sendEvent, flow.flowName + "," + flow.windowFailed));
 		}
 
 		// Return a list of events to add to the event priority queue

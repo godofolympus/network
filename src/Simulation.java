@@ -45,19 +45,21 @@ public class Simulation {
 
 		// Define variables to use during simulation
 		int eventCount = 0;
-		int dataCollectionFreq = 10;
-		int stopping_count = 200000000;
+		int dataCollectionFreq = 100;
+		int stopping_count = 100000;
 		double prevTime = 0.0;
 
 		// Begin simulation by popping from eventQueue until it is empty
 		while (eventQueue.size() != 0) {
 			// TODO: Remove stopping count before submitting
-			if (eventCount > stopping_count)
-				break;
+			//if (eventCount > stopping_count)
+			//	break;
 
 			// Pull next event and print out its information
 			Event event = eventQueue.poll();
-			//System.out.println(event);
+			//if(event.time > 4.6)
+			//	break;
+			System.out.println(event);
 
 			// Collect data after handling a given number of events
 			if (eventCount % dataCollectionFreq == 0) {
@@ -75,7 +77,7 @@ public class Simulation {
 
 			eventCount++;
 		}
-
+		System.out.println(network.flows.get("F1").maxPacketId + "," + network.flows.get("F1").totalPackets);
 		System.out.println("Simulation concluded");
 
 		// Collect data in proper format
@@ -135,6 +137,7 @@ public class Simulation {
 			ArrayList<Double> fieldValues = flowData.get(field);
 			Graph.plot(field, "time (seconds)", field.substring(field.indexOf('-') + 1), null, timeList, fieldValues, null);
 		}
+		System.out.println(timeList);
 		
 	}
 

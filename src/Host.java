@@ -46,25 +46,24 @@ public class Host extends Component {
 			// Update RTT time based on the time it took to arrive
 			// flow.rtt = 1.1*(0.5 * (time - packet.dataSendingTime)
 			// + 0.5 * flow.rtt + 0.0001);
-			flow.rtt = (time - packet.dataSendingTime + 0.0001) * 1.1;
+			flow.rtt = (time - packet.dataSendingTime + 0.0001) * 1.5;
 
 			// Update sending buffer window.
 			//flow.currentPackets++;
 			int nextUnacknowledgedPacket = packet.negPacketId;
-			boolean minChanged = flow.minUnacknowledgedPacketSender < nextUnacknowledgedPacket;
 			while (flow.minUnacknowledgedPacketSender < nextUnacknowledgedPacket) {
-				flow.currentPackets++;
+				if(flow.sendingBuffer.containsKey(flow.minUnacknowledgedPacketSender)){
+					flow.sendingBuffer.remove(flow.minUnacknowledgedPacketSender);
+				}
 				flow.minUnacknowledgedPacketSender++;
 			}
-
+			//System.out.println("Next Unacknowledged Packet: Packet " + flow.minUnacknowledgedPacketSender);
 			// if (flow.currentPackets < flow.totalPackets)
 			// System.out.println("Next Unacknowledged Packet: Packet "
 			// + flow.minUnacknowledgedPacketSender);
 
 			// Schedule new data packets to fill up window.
-			if (minChanged && flow.currentPackets < flow.totalPackets) {
-				flow.maxPacketId = flow.minUnacknowledgedPacketReceiver;
-				int windowInt = flow.maxPacketId;
+			if (flow.maxPacketId < flow.totalPackets) {
 				while (flow.sendingBuffer.size() < Math.floor(flow.windowSize)) {
 					Packet nextPacket = new Packet(flow.maxPacketId,
 							Constants.PacketType.DATA, Constants.PACKET_SIZE,
@@ -78,7 +77,7 @@ public class Host extends Component {
 					SendPacketEvent sendEvent = new SendPacketEvent(time,
 							nextPacket, flow.srcHost, currentDst, link);
 					newEvents.add(sendEvent);
-					newEvents.add(new NegAckEvent(time + flow.rtt, nextPacket, sendEvent, flow.flowName + "," + windowInt));
+					newEvents.add(new NegAckEvent(time + flow.rtt, nextPacket, sendEvent, flow.flowName + "," + flow.windowFailed));
 				}
 			}
 		} else {
