@@ -9,8 +9,6 @@ public class Simulation {
 	// TODO: - Implement changes already mentioned as todos
 	// TODO: - Add dynamic shortest path finding
 	// TODO: - Implement two methods of congestion control
-	// TODO: - Add code that collects data from the entire network and save
-	// somewhere. Plot using matplotlib or some other library
 	// TODO: - Add more comments and structure code better
 	// TODO: - Test code
 
@@ -47,7 +45,7 @@ public class Simulation {
 
 		// Define variables to use during simulation
 		int eventCount = 0;
-		int dataCollectionFreq = 1000;
+		int dataCollectionFreq = 500;
 		int stopping_count = 1000000;
 		double prevTime = 0.0;
 
@@ -87,6 +85,7 @@ public class Simulation {
 		HashMap<String, ArrayList<Double>> flowData = new HashMap<String, ArrayList<Double>>();
 
 		for (DataElement element : dataCollector.dataList) {
+
 			// Add the time element
 			timeList.add((element.endTime +  element.startTime) / 2);
 

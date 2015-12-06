@@ -32,9 +32,8 @@ public class DataCollector {
 			link.packetsLost = 0;
 			link.bytesSent = 0;
 
-			// Create new LinkData element and save it 
-			LinkData linkData = new LinkData(occData, packetsLost, flowRate);
-			dataElement.addLinkData(link.linkName, linkData);
+			// Add to data element
+			dataElement.addLinkData(link.linkName, occData, packetsLost, flowRate);
 		}
 
 		// Iterate over flows
@@ -52,9 +51,8 @@ public class DataCollector {
 			flow.rttSum = 0.0;
 			flow.acksReceived = 0;
 			
-			// Create new FlowData element and put it in our DataElement
-			FlowData flowData = new FlowData(sendRate, recRate, rtt, windowSize);
-			dataElement.addFlowData(flow.flowName, flowData);
+			// Add to data element
+			dataElement.addFlowData(flow.flowName, sendRate, recRate, rtt, windowSize);
 		}
 		
 		// Iterate over hosts
@@ -68,9 +66,8 @@ public class DataCollector {
 			host.bytesSent = 0;
 			host.bytesReceived = 0;
 			
-			// Create new HostData element
-			HostData hostData = new HostData(sendRate, recRate);
-			dataElement.addHostData(host.name, hostData);
+			// Add to data element
+			dataElement.addHostData(host.name, sendRate, recRate);
 		}
 
 		// Append this dataElement to our list

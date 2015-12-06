@@ -1,6 +1,4 @@
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class Router extends Component {
 	// HashMap<String, Link> links = new HashMap<String, Link>();
