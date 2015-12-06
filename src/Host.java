@@ -51,8 +51,9 @@ public class Host extends Component {
 		} else if (packet.packetType == Constants.PacketType.ACK) {
 			// Remove packet from sending buffer if received ack packet.
 			// Update RTT time based on the time it took to arrive
-			flow.rtt = 0.5 * (time - packet.dataSendingTime)
-					+ 0.5 * flow.rtt + 0.0001;
+			//flow.rtt = 1.1*(0.5 * (time - packet.dataSendingTime)
+			//		+ 0.5 * flow.rtt + 0.0001);
+			flow.rtt = (time - packet.dataSendingTime + 0.0001)*1.1;
 			
 			// Update sending buffer window.
 			flow.currentPackets++;

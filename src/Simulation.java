@@ -45,8 +45,8 @@ public class Simulation {
 
 		// Define variables to use during simulation
 		int eventCount = 0;
-		int dataCollectionFreq = 50;
-		int stopping_count = 200;
+		int dataCollectionFreq = 10;
+		int stopping_count = 200000000;
 		double prevTime = 0.0;
 
 		// Begin simulation by popping from eventQueue until it is empty
@@ -57,7 +57,7 @@ public class Simulation {
 
 			// Pull next event and print out its information
 			Event event = eventQueue.poll();
-			System.out.println(event);
+			//System.out.println(event);
 
 			// Collect data after handling a given number of events
 			if (eventCount % dataCollectionFreq == 0) {
@@ -135,7 +135,7 @@ public class Simulation {
 			ArrayList<Double> fieldValues = flowData.get(field);
 			Graph.plot(field, "time (seconds)", field.substring(field.indexOf('-') + 1), null, timeList, fieldValues, null);
 		}
-
+		
 	}
 
 }

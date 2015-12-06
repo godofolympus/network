@@ -29,10 +29,11 @@ public class DataElement {
 		linkDataList.put(linkName + "-" + Constants.linkFields[2], flowRate);
 	}
 	
-	public void addFlowData(String flowName, double sendRate, double receiveRate, double rtt, double windowSize) {
+	public void addFlowData(String flowName, double sendRate, double receiveRate, double rtt, double windowSize, double slowStartThresh) {
 		flowDataList.put(flowName + "-" + Constants.flowFields[0], sendRate);
 		flowDataList.put(flowName + "-" + Constants.flowFields[1], receiveRate);
 		flowDataList.put(flowName + "-" + Constants.flowFields[2], rtt);
 		flowDataList.put(flowName + "-" + Constants.flowFields[3], windowSize);
+		flowDataList.put(flowName + "-" + Constants.flowFields[4], slowStartThresh);
 	}
 }

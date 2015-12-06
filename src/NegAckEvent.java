@@ -25,7 +25,7 @@ public class NegAckEvent extends Event {
 			// Handle a missed ack packet depending on the tcp algorithm
 			switch(flow.tcp) {
 			case TAHOE:
-				flow.slowStartThresh = Math.min(1, (int) (flow.windowSize / 2.0));
+				flow.slowStartThresh = Math.max(1, (int) (flow.windowSize / 2.0));
 				flow.windowSize = 1.0;
 				break;
 			case RENO:

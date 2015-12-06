@@ -10,7 +10,7 @@ public class Constants {
 	
 	public static String[] hostFields = {"sendRate", "receiveRate"};
 	public static String[] linkFields = {"occupancyData", "packetsLost", "flowRate"};
-	public static String[] flowFields = {"sendRate", "receiveRate", "rtt", "windowSize"};
+	public static String[] flowFields = {"sendRate", "receiveRate", "rtt", "windowSize", "slowStartThresh"};
 
 	
 	// Packet types

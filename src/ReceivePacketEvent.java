@@ -58,6 +58,7 @@ public class ReceivePacketEvent extends Event {
 						// Adjust window size depending on the phase we are in
 						if (flow.windowSize < flow.slowStartThresh) {
 							flow.windowSize++;
+							
 						} else {
 							flow.windowSize += 1.0 / flow.windowSize;
 						}

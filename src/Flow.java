@@ -9,7 +9,7 @@ public class Flow {
 	double rtt = 0.1;
 	
 	Constants.TCP tcp;
-	int slowStartThresh;
+	double slowStartThresh;
 
 	double windowSize;
 	int totalPackets;
