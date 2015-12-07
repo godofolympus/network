@@ -4,10 +4,9 @@ import java.util.List;
 
 public class NegAckEvent extends Event {
 	SendPacketEvent sendEvent;
-	String windowId = "";
-	static HashSet<String> windowIds = new HashSet<String>();
+	int windowId;
 
-	public NegAckEvent(double time, Packet packet, SendPacketEvent sendEvent, String windowId) {
+	public NegAckEvent(double time, Packet packet, SendPacketEvent sendEvent, int windowId) {
 		super(time, packet);
 		this.sendEvent = sendEvent;
 		this.windowId = windowId;
@@ -18,21 +17,25 @@ public class NegAckEvent extends Event {
 		ArrayList<Event> newEvents = new ArrayList<Event>();
 		Host srcHost = (Host) sendEvent.src;
 		Flow flow = srcHost.currentFlows.get(packet.flowName);
+		if(this.time - sendEvent.time < flow.rtt){
+			if(flow.sendingBuffer.containsKey(packet.id)){
+				this.time = sendEvent.time + flow.rtt;
+				newEvents.add(this);
+			}
+			return newEvents;
+		}
 		// If packet is still in the sending buffer then an ack packet has not
 		// been received, and so re-send the packet.
 		if (flow.sendingBuffer.containsKey(packet.id)) {
-			if(windowIds.contains(windowId)){
+			if(windowId < flow.windowFailed){
 				System.out.println("Window Already Failed");
 				return newEvents;
 			}
-			else{
-				windowIds.add(windowId);
-			}
-			System.out.println("Ack Failed for Packet " + packet.id + ", Adding New Packets, Window Size: " + flow.windowSize);
+			//System.out.println("Ack Failed for Packet " + packet.id + ", Adding New Packets, Window Size: " + flow.windowSize + ", Time: " + time);
 			// Handle a missed ack packet depending on the tcp algorithm
 			switch(flow.tcp) {
 			case TAHOE:
-				flow.slowStartThresh = Math.max(1, (int) (flow.windowSize / 2.0));
+				flow.slowStartThresh = Math.max(1, flow.windowSize / 2.0);
 				flow.windowSize = 1.0;
 				break;
 			case RENO:
@@ -43,10 +46,9 @@ public class NegAckEvent extends Event {
 			flow.windowSizeSum += flow.windowSize;
 			flow.windowChangedCount++;
 			flow.windowFailed += 1;
-			flow.maxPacketId = flow.minUnacknowledgedPacketSender;
 			flow.sendingBuffer.clear();
-			for(flow.maxPacketId = flow.minUnacknowledgedPacketSender; flow.maxPacketId < flow.minUnacknowledgedPacketSender+Math.floor(flow.windowSize); flow.maxPacketId++){
-				Packet nextPacket = new Packet(flow.maxPacketId,
+			for(int packetId = flow.minUnacknowledgedPacketSender; packetId < Math.min(flow.totalPackets, flow.minUnacknowledgedPacketSender+Math.floor(flow.windowSize)); packetId++){
+				Packet nextPacket = new Packet(packetId,
 						Constants.PacketType.DATA, Constants.PACKET_SIZE,
 						flow.srcHost, flow.dstHost, flow.flowName);
 				//System.out.println("New DATA Packet " + nextPacket.id);
@@ -58,7 +60,7 @@ public class NegAckEvent extends Event {
 				SendPacketEvent sendEvent = new SendPacketEvent(time,
 						nextPacket, flow.srcHost, currentDst, link);
 				newEvents.add(sendEvent);
-				newEvents.add(new NegAckEvent(time + flow.rtt, nextPacket, sendEvent, flow.flowName + "," + flow.windowFailed));
+				newEvents.add(new NegAckEvent(time + flow.rtt, nextPacket, sendEvent, flow.windowFailed));
 			}
 			//System.out.println("Max Packet Id " + flow.maxPacketId);
 		}

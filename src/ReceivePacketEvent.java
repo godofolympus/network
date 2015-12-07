@@ -52,8 +52,7 @@ public class ReceivePacketEvent extends Event {
 				switch (flow.tcp) {
 				case TAHOE:
 					// Only increment windowSize if this is a new ACK packet
-					if (packet.id >= flow.minUnacknowledgedPacketSender
-							&& flow.sendingBuffer.containsKey(packet.id)) {
+					if (packet.negPacketId > flow.minUnacknowledgedPacketSender) {
 						
 						// Adjust window size depending on the phase we are in
 						if (flow.windowSize < flow.slowStartThresh) {

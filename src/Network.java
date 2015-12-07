@@ -80,8 +80,8 @@ public class Network {
 			if (tcp.equals("TAHOE")) {
 				Flow flow = flows.get(flowName);
 				flow.tcp = Constants.TCP.TAHOE;
-				flow.windowSize = 2.0;
-				flow.slowStartThresh = 43;
+				flow.windowSize = 1.0;
+				flow.slowStartThresh = 100;
 				
 			} else if (tcp.equals("RENO")) {
 				// TODO: Finish this

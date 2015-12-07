@@ -57,12 +57,12 @@ public class Simulation {
 
 			// Pull next event and print out its information
 			Event event = eventQueue.poll();
-			//if(event.time > 4.6)
+			//if(event.time > 1.25)
 			//	break;
 			System.out.println(event);
 
 			// Collect data after handling a given number of events
-			if (eventCount % dataCollectionFreq == 0) {
+			if (eventCount % dataCollectionFreq == 0 && event.time > 1) {
 				prevTime = dataCollector.collectData(prevTime, event.time);
 			}
 
@@ -77,7 +77,6 @@ public class Simulation {
 
 			eventCount++;
 		}
-		System.out.println(network.flows.get("F1").maxPacketId + "," + network.flows.get("F1").totalPackets);
 		System.out.println("Simulation concluded");
 
 		// Collect data in proper format
@@ -137,7 +136,6 @@ public class Simulation {
 			ArrayList<Double> fieldValues = flowData.get(field);
 			Graph.plot(field, "time (seconds)", field.substring(field.indexOf('-') + 1), null, timeList, fieldValues, null);
 		}
-		System.out.println(timeList);
 		
 	}
 

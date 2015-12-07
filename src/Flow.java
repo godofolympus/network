@@ -14,7 +14,6 @@ public class Flow {
 	double windowSize;
 	int totalPackets;
 	int currentPackets = 0;
-	int maxPacketId = 0;
 	int minUnacknowledgedPacketSender = 0;
 	int minUnacknowledgedPacketReceiver = 0;
 	int windowFailed = 0;
