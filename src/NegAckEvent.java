@@ -31,12 +31,15 @@ public class NegAckEvent extends Event {
 				System.out.println("Window Already Failed");
 				return newEvents;
 			}
-			//System.out.println("Ack Failed for Packet " + packet.id + ", Adding New Packets, Window Size: " + flow.windowSize + ", Time: " + time);
+			System.out.println("Ack Failed for Packet " + packet.id + ", Adding New Packets, Window Size: " + flow.windowSize + ", Time: " + time);
 			// Handle a missed ack packet depending on the tcp algorithm
 			switch(flow.tcp) {
 			case TAHOE:
-				flow.slowStartThresh = Math.max(1, flow.windowSize / 2.0);
+				flow.slowStartThresh = Math.max(1, (int)flow.windowSize/2);
 				flow.windowSize = 1.0;
+				flow.dupPacketId = -1;
+				flow.dupPacketCount = 0;
+				flow.fastRetransmit = false;
 				break;
 			case RENO:
 				break;

@@ -73,6 +73,7 @@ public class SendPacketEvent extends Event {
 
 		} else {
 			// Handle case where packet is dropped
+			//System.out.println("Packet Lost: " + packet.id + " Time " + time);
 			link.packetsLost++;
 		}
 

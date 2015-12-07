@@ -17,6 +17,9 @@ public class Flow {
 	int minUnacknowledgedPacketSender = 0;
 	int minUnacknowledgedPacketReceiver = 0;
 	int windowFailed = 0;
+	int dupPacketId = -1;
+	int dupPacketCount = 0;
+	boolean fastRetransmit = false;
 	// TODO: sendingBuffer and receivingBuffer should be moved into host
 	HashMap<Integer, Packet> sendingBuffer = new HashMap<Integer, Packet>();
 	//HashMap<Integer, Double> sendingTimes = new HashMap<Integer, Double>();

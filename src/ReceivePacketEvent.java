@@ -51,8 +51,45 @@ public class ReceivePacketEvent extends Event {
 				// Adjust the window size depending on TCP congestion algorithm
 				switch (flow.tcp) {
 				case TAHOE:
+					if(!flow.fastRetransmit){
+						if(packet.negPacketId == flow.dupPacketId && flow.windowSize >= flow.slowStartThresh){
+							flow.dupPacketCount++;
+						} else{
+							flow.dupPacketId = packet.negPacketId;
+							flow.dupPacketCount = 0;
+						}
+						if(flow.dupPacketCount == 3){
+							System.out.println("Fast Retransmit for Packet" + packet.negPacketId);
+							System.out.println(flow.windowSize + "," + flow.slowStartThresh);
+							flow.slowStartThresh = Math.max((int)flow.windowSize/2, 2);
+							flow.windowSize = flow.slowStartThresh+3;
+							flow.fastRetransmit = true;
+							//Packet minPacket = flow.sendingBuffer.get(packet.negPacketId);
+							Packet minPacket = new Packet(packet.negPacketId,
+									Constants.PacketType.DATA, Constants.PACKET_SIZE,
+									flow.srcHost, flow.dstHost, flow.flowName);
+							Link link = flow.srcHost.links.values().iterator().next();
+							Component currentDst = link
+									.getAdjacentEndpoint(flow.srcHost);
+							SendPacketEvent sendEvent = new SendPacketEvent(time,
+									minPacket, flow.srcHost, currentDst, link);
+							newEvents.add(sendEvent);
+							newEvents.add(new NegAckEvent(time + flow.rtt, minPacket, sendEvent, flow.windowFailed));
+						}
+					}
+					else if(flow.fastRetransmit){
+						if(flow.dupPacketId == packet.negPacketId){
+							flow.windowSize++;
+						} else{
+							System.out.println("Fast Retransmit Ended!");
+							flow.windowSize = flow.slowStartThresh;
+							flow.dupPacketId = -1;
+							flow.dupPacketCount = 0;
+							flow.fastRetransmit = false;
+						}
+					}
 					// Only increment windowSize if this is a new ACK packet
-					if (packet.negPacketId > flow.minUnacknowledgedPacketSender) {
+					if (!flow.fastRetransmit && packet.negPacketId > flow.minUnacknowledgedPacketSender) {
 						
 						// Adjust window size depending on the phase we are in
 						if (flow.windowSize < flow.slowStartThresh) {
