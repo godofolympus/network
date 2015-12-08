@@ -23,10 +23,10 @@ public class NegAckEvent extends Event {
 
 		// Check that this NegAckEvent executes at the proper time,
 		// taking into consideration our most recent flow rtt
-		if (this.time - sendEvent.time < flow.rtt) {
+		if (this.time - sendEvent.time < flow.timeout) {
 			if (flow.sendingBuffer.containsKey(packet.id)) {
 				// Reschedule this event if the packet is still in the network
-				this.time = sendEvent.time + flow.rtt;
+				this.time = sendEvent.time + flow.timeout;
 				newEvents.add(this);
 			}
 			return newEvents;
@@ -47,14 +47,13 @@ public class NegAckEvent extends Event {
 			// Handle a missed ACK packet depending on the TCP algorithm
 			switch (flow.tcp) {
 			case RENO:
+			case FAST:
 				// If we miss an ACK, then enter Slow Start
 				flow.slowStartThresh = Math.max(1, (int) flow.windowSize / 2);
 				flow.windowSize = 1.0;
 				flow.dupPacketId = -1;
 				flow.dupPacketCount = 0;
 				flow.fastRecovery = false;
-				break;
-			case FAST:
 				break;
 			}
 
@@ -87,7 +86,7 @@ public class NegAckEvent extends Event {
 				SendPacketEvent sendEvent = new SendPacketEvent(time,
 						nextPacket, flow.srcHost, currentDst, link);
 				newEvents.add(sendEvent);
-				newEvents.add(new NegAckEvent(time + flow.rtt, nextPacket,
+				newEvents.add(new NegAckEvent(time + flow.timeout, nextPacket,
 						sendEvent, flow.windowFailed));
 			}
 		}

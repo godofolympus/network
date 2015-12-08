@@ -84,7 +84,10 @@ public class Network {
 				flow.slowStartThresh = 1000;
 				
 			} else if (tcp.equals("FAST")) {
-				// TODO: Finish this
+				Flow flow = flows.get(flowName);
+				flow.tcp = Constants.TCP.FAST;
+				flow.windowSize = 1.0;
+				flow.slowStartThresh = 1000;
 			}
 		}
 

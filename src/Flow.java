@@ -7,7 +7,9 @@ public class Flow {
 	double dataAmount;
 	double startTime;
 	double rtt = /*0.03*/1;
-	
+	double timeout = 3;
+	double minRtt = rtt;
+
 	Constants.TCP tcp;
 	double slowStartThresh;
 

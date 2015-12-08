@@ -17,11 +17,12 @@ public class InitializeFlowEvent extends Event {
 		List<Event> events = new ArrayList<Event>();
 
 		// Set up the first few packets to send
-		for (int packetId = 0; packetId < Math.min(Math.floor(flow.windowSize), flow.totalPackets); packetId++) {
+		for (int packetId = 0; packetId < Math.min(Math.floor(flow.windowSize),
+				flow.totalPackets); packetId++) {
 			// Create new Packet object based on flow information
-			Packet packet = new Packet(packetId,
-					Constants.PacketType.DATA, Constants.PACKET_SIZE,
-					flow.srcHost, flow.dstHost, flow.flowName);
+			Packet packet = new Packet(packetId, Constants.PacketType.DATA,
+					Constants.PACKET_SIZE, flow.srcHost, flow.dstHost,
+					flow.flowName);
 
 			// Place packet/time in respective buffer
 			flow.sendingBuffer.put(packet.id, packet);
@@ -38,7 +39,13 @@ public class InitializeFlowEvent extends Event {
 
 			// Schedule NegAckEvent to handle any packets that have not been
 			// acknowledged within one RTT
-			events.add(new NegAckEvent(time + flow.rtt, packet, sendEvent, flow.windowFailed));
+			events.add(new NegAckEvent(time + flow.timeout, packet, sendEvent,
+					flow.windowFailed));
+		}
+		if (flow.tcp == Constants.TCP.FAST) {
+			events.add(
+					new FastUpdateEvent(time + Constants.TCP_FAST_TIME_INTERVAL,
+							Constants.TCP_FAST_TIME_INTERVAL, flow));
 		}
 
 		// Return a list of events to add to the event priority queue

@@ -49,7 +49,9 @@ public class Host extends Component {
 			// Update RTT time based on the time it took to arrive
 			// flow.rtt = 1.1*(0.5 * (time - packet.dataSendingTime)
 			// + 0.5 * flow.rtt + 0.0001);
-			flow.rtt = 3*(time - packet.dataSendingTime);
+			flow.rtt = time - packet.dataSendingTime;
+			flow.minRtt = Math.min(flow.rtt, flow.minRtt);
+			flow.timeout = 3*flow.rtt;
 
 			// Update sending buffer window.
 			//flow.currentPackets++;
@@ -79,7 +81,7 @@ public class Host extends Component {
 				SendPacketEvent sendEvent = new SendPacketEvent(time,
 						nextPacket, flow.srcHost, currentDst, link);
 				newEvents.add(sendEvent);
-				newEvents.add(new NegAckEvent(time + flow.rtt, nextPacket, sendEvent, flow.windowFailed));
+				newEvents.add(new NegAckEvent(time + flow.timeout, nextPacket, sendEvent, flow.windowFailed));
 			}
 		} else {
 			// TODO: Handle other data packets

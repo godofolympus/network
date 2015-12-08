@@ -75,10 +75,12 @@ public class Simulation {
 
 			// If handling this event spawns new events, add them to the
 			// priority queue
-			if (newEvents != null) {
+			if (newEvents != null && newEvents.size() > 0) {
+				if(eventQueue.size() == 0 && newEvents.get(0) instanceof FastUpdateEvent){
+					break;
+				}
 				eventQueue.addAll(newEvents);
 			}
-
 			eventCount++;
 		}
 		System.out.println("Simulation concluded");
