@@ -26,15 +26,16 @@ public class DataCollector {
 			double occData = link.currentLeftBufferAmt
 					+ link.currentRightBufferAmt;
 			int packetsLost = link.packetsLost;
-			double flowRate = link.bytesSent / (currentTime - prevTime);
-			double totalDelay = link.totalDelay;
+			double flowRate = link.bytesSent / link.bytesTime;
+			double totalLeftDelay = link.totalLeftDelay;
+			double totalRightDelay = link.totalRightDelay;
 
 			// Reset link data
 			link.packetsLost = 0;
-			link.bytesSent = 0;
+			//link.bytesSent = 0;
 
 			// Add to data element
-			dataElement.addLinkData(link.linkName, occData, packetsLost, flowRate, totalDelay);
+			dataElement.addLinkData(link.linkName, occData, packetsLost, flowRate/*, totalLeftDelay, totalRightDelay*/);
 		}
 
 		// Iterate over flows

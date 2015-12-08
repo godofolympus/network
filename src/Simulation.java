@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Scanner;
 
+import org.knowm.xchart.Chart;
+import org.knowm.xchart.SwingWrapper;
+
 public class Simulation {
 	// TODO: - Implement changes already mentioned as todos
 	// TODO: - Add dynamic shortest path finding
@@ -45,25 +48,32 @@ public class Simulation {
 
 		// Define variables to use during simulation
 		int eventCount = 0;
-		int dataCollectionFreq = 100;
-		int routingFreq = 200;
-		int outputFreq = 2000;
+		int dataCollectionFreq = 1000;
+		int routingFreq = 2000;
+		int outputFreq = 20000;
 		double prevTime = 0.0;
-
+		
+		double time = 0;
+		double timeInterval = 0.1;
+		
 		// Begin simulation by popping from eventQueue until it is empty
 		while (eventQueue.size() != 0) {
 			// Pull next event and print out its information
 			Event event = eventQueue.poll();
 
 			// Collect data after handling a given number of events
-			if (eventCount % dataCollectionFreq == 0) {
-				prevTime = dataCollector.collectData(prevTime, event.time);
+			//if (eventCount % dataCollectionFreq == 0) {
+			//	prevTime = dataCollector.collectData(prevTime, event.time);
+			//}
+			while(event.time > time){
+				dataCollector.collectData(time, time + timeInterval);
+				time += timeInterval;
 			}
 			
 			// Add routing event after a given number of events
-			if (eventCount % routingFreq == 0) {
-				eventQueue.add(new RoutingEvent(event.time, network.routers));
-			}
+//			if (eventCount % routingFreq == 0) {
+//				eventQueue.add(new RoutingEvent(event.time, network.routers));
+//			}
 			
 			// Output current event after a given number of events
 			if (eventCount % outputFreq == 0) {
@@ -76,7 +86,7 @@ public class Simulation {
 			// If handling this event spawns new events, add them to the
 			// priority queue
 			if (newEvents != null && newEvents.size() > 0) {
-				if(eventQueue.size() == 0 && newEvents.get(0) instanceof FastUpdateEvent){
+				if(eventQueue.size() <= network.flows.size() && newEvents.get(0) instanceof FastUpdateEvent){
 					break;
 				}
 				eventQueue.addAll(newEvents);
@@ -126,24 +136,86 @@ public class Simulation {
 		
 		// Plot the data that we collected
 		// Iterate over hosts
+//		for (String field : hostData.keySet()) {
+//			ArrayList<Double> fieldValues = hostData.get(field);
+//			Graph.plot(field, "time (seconds)", field.substring(field.indexOf('-') + 1), field, timeList, fieldValues, null);
+//		}
+//
+//		// Iterate over links
+//		for (String field : linkData.keySet()) {
+//			ArrayList<Double> fieldValues = linkData.get(field);
+//			Graph.plot(field, "time (seconds)", field.substring(field.indexOf('-') + 1), field, timeList, fieldValues, null);
+//		}
+		
+		// Iterate over hosts
+		HashMap<String, Chart> hostMap = new HashMap<String, Chart>();
 		for (String field : hostData.keySet()) {
 			ArrayList<Double> fieldValues = hostData.get(field);
-			Graph.plotScatter(field, "time (seconds)", field.substring(field.indexOf('-') + 1), field, timeList, fieldValues, null);
-		}
 
+			Chart chart = null;
+			if(hostMap.containsKey(field.substring(field.indexOf('-') + 1))){
+				chart = hostMap.get(field.substring(field.indexOf('-') + 1));
+			}
+			
+			chart = Graph.plot(field.substring(field.indexOf('-') + 1), "time (seconds)", field.substring(field.indexOf('-') + 1), field, timeList, fieldValues, null, chart);
+			hostMap.put(field.substring(field.indexOf('-') + 1), chart);
+		}
+		
+		for(Chart chart:hostMap.values()){
+			new SwingWrapper(chart).displayChart();
+		}
+		
 		// Iterate over links
+		HashMap<String, Chart> linkMap = new HashMap<String, Chart>();
 		for (String field : linkData.keySet()) {
 			ArrayList<Double> fieldValues = linkData.get(field);
-			Graph.plotScatter(field, "time (seconds)", field.substring(field.indexOf('-') + 1), field, timeList, fieldValues, null);
+
+			Chart chart = null;
+			if(linkMap.containsKey(field.substring(field.indexOf('-') + 1))){
+				chart = linkMap.get(field.substring(field.indexOf('-') + 1));
+			}
+			
+			chart = Graph.plot(field.substring(field.indexOf('-') + 1), "time (seconds)", field.substring(field.indexOf('-') + 1), field, timeList, fieldValues, null, chart);
+			linkMap.put(field.substring(field.indexOf('-') + 1), chart);
+		}
+		
+		for(Chart chart:linkMap.values()){
+			new SwingWrapper(chart).displayChart();
 		}
 
 		// Iterate over flows
+		HashMap<String, Chart> flowMap = new HashMap<String, Chart>();
 		for (String field : flowData.keySet()) {
 			ArrayList<Double> fieldValues = flowData.get(field);
-			Graph.plotScatter(field, "time (seconds)", field.substring(field.indexOf('-') + 1), field, timeList, fieldValues, null);
+
+			Chart chart = null;
+			if(flowMap.containsKey(field.substring(field.indexOf('-') + 1))){
+				chart = flowMap.get(field.substring(field.indexOf('-') + 1));
+			}
+			
+			chart = Graph.plot(field.substring(field.indexOf('-') + 1), "time (seconds)", field.substring(field.indexOf('-') + 1), field, timeList, fieldValues, null, chart);
+			flowMap.put(field.substring(field.indexOf('-') + 1), chart);
 		}
 		
+		for(Chart chart:flowMap.values()){
+			new SwingWrapper(chart).displayChart();
+		}
 		
+		// For each field in flows
+		
+//		for (String field : Constants.flowFields) {
+//			Chart 
+//			for (String flow : network.flows.keySet()) {
+//				String key = flow + "-" + field;
+//				System.out.println(key);
+//				fieldValuesList.add(flowData.get(flow + "-" + field));
+//			}
+//			
+//			System.out.println(fieldValuesList.size());
+//			
+//			Graph.multiplot(field, "time (seconds)", field.substring(field.indexOf('-') + 1), network.flows.keySet(), timeList, fieldValuesList, null);
+//		}
+
 	}
 
 }

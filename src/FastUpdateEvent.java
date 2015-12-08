@@ -14,7 +14,7 @@ public class FastUpdateEvent extends Event{
 	@Override
 	public List<Event> handle() {
 		ArrayList<Event> newEvents = new ArrayList<Event>();
-		flow.windowSize = flow.minRtt/flow.rtt*flow.windowSize + 1;
+		flow.windowSize = flow.minRtt/flow.rtt*flow.windowSize + 30;
 		newEvents.add(new FastUpdateEvent(this.time+timeInterval, timeInterval, flow));
 		return newEvents;
 	}

@@ -47,13 +47,14 @@ public class NegAckEvent extends Event {
 			// Handle a missed ACK packet depending on the TCP algorithm
 			switch (flow.tcp) {
 			case RENO:
-			case FAST:
 				// If we miss an ACK, then enter Slow Start
 				flow.slowStartThresh = Math.max(1, (int) flow.windowSize / 2);
 				flow.windowSize = 1.0;
 				flow.dupPacketId = -1;
 				flow.dupPacketCount = 0;
 				flow.fastRecovery = false;
+				break;
+			case FAST:
 				break;
 			}
 

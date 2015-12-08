@@ -17,16 +17,23 @@ public class ReceivePacketEvent extends Event {
 		ArrayList<Event> newEvents = new ArrayList<Event>();
 
 		// Packet has been received, so increment packetsSent in link
-		if (packet.packetType == Constants.PacketType.DATA) {
+		/*if (packet.packetType == Constants.PacketType.DATA) {
 			link.bytesSent += Constants.PACKET_SIZE;
 		} else if (packet.packetType == Constants.PacketType.ACK) {
 			link.bytesSent += Constants.ACK_SIZE;
 		} else {
 			// TODO: Handle other cases
-		}
+		}*/
+		link.bytesSent -= packet.size;
+		link.bytesTime -= packet.size/link.linkRate;
 		
 		// Packet has been received, so update the congestion metric of the link
-		link.totalDelay = time - packet.linkArrivalTime;
+		if (component == link.rightEndPoint) {
+			link.totalRightDelay = time - packet.linkArrivalTime;
+		} else {
+			link.totalLeftDelay = time - packet.linkArrivalTime;
+		}
+		
 
 		// Handle a packet according to whether it is received at a host
 		// or at a router
@@ -125,11 +132,11 @@ public class ReceivePacketEvent extends Event {
 					break;
 				case FAST:
 					// Adjust window size depending on the phase we are in
-					if (flow.windowSize < flow.slowStartThresh) {
+					//if (flow.windowSize < flow.slowStartThresh) {
 						// Slow Start
-						flow.windowSize++;
-					}
-					break;
+						//flow.windowSize++;
+					//}
+					//break;
 				}
 			} else {
 				// TODO: Handle other cases

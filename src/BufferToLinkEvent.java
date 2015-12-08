@@ -19,6 +19,8 @@ public class BufferToLinkEvent extends Event {
 		Packet nextPacket = null;
 
 		// Handle transfer of the packet depending on direction
+		link.bytesSent += packet.size;
+		link.bytesTime += packet.size/link.linkRate;
 		if (direction == Constants.Direction.RIGHT) {
 			link.leftBuffer.poll();
 			newEvents.add(new ReceivePacketEvent(this.time + link.linkDelay,

@@ -23,11 +23,12 @@ public class DataElement {
 		hostDataList.put(hostName + "-" + Constants.hostFields[1], receiveRate);
 	}
 	
-	public void addLinkData(String linkName, double occupancyData, double packetsLost, double flowRate, double totalDelay) {
+	public void addLinkData(String linkName, double occupancyData, double packetsLost, double flowRate/*, double totalLeftDelay, double totalRightDelay*/) {
 		linkDataList.put(linkName + "-" + Constants.linkFields[0], occupancyData);
 		linkDataList.put(linkName + "-" + Constants.linkFields[1], packetsLost);
 		linkDataList.put(linkName + "-" + Constants.linkFields[2], flowRate);
-		linkDataList.put(linkName + "-" + Constants.linkFields[3], totalDelay);
+//		linkDataList.put(linkName + "-" + Constants.linkFields[3], totalLeftDelay);
+//		linkDataList.put(linkName + "-" + Constants.linkFields[4], totalRightDelay);
 	}
 	
 	public void addFlowData(String flowName, double sendRate, double receiveRate, double rtt, double windowSize, double slowStartThresh) {

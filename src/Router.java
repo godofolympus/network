@@ -31,7 +31,13 @@ public class Router extends Component {
 		for (Link link : links.values()) {
 			// Set the distance to the adjacent components
 			Component adjComponent = link.getAdjacentEndpoint(this);
-			distances.put(adjComponent.name, link.totalDelay);
+			
+			if (link.leftEndPoint == this) {
+				distances.put(adjComponent.name, link.totalRightDelay);
+			} else {
+				distances.put(adjComponent.name, link.totalLeftDelay);
+			}
+			
 			
 			// Add this distance to the routing table
 			routingTable.put(adjComponent.name, link);
@@ -48,8 +54,13 @@ public class Router extends Component {
 		for (Link link : distancesList.keySet()) {
 			HashMap<String, Double> newDistances = distancesList.get(link);
 			for (String componentName : newDistances.keySet()) {
-				double newDist = link.totalDelay
-						+ newDistances.get(componentName);
+				
+				double newDist = newDistances.get(componentName);
+				if (link.leftEndPoint == this) {
+					newDist += link.totalRightDelay;
+				} else {
+					newDist += link.totalLeftDelay;
+				}
 				
 				// Dynamic programming step to update distance.
 				if (newDist < distances.get(componentName)) {

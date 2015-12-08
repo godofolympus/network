@@ -6,7 +6,8 @@ public class Link {
 	Component rightEndPoint;
 	double linkRate;
 	double linkDelay;
-	double totalDelay;
+	double totalLeftDelay;
+	double totalRightDelay;
 	double currentLeftBufferAmt;
 	double currentRightBufferAmt;
 	double bufferSize;
@@ -17,7 +18,8 @@ public class Link {
 	
 	// Used by DataCollector to plot data
 	int packetsLost;
-	int bytesSent;
+	double bytesSent;
+	double bytesTime;
 
 	public Link(String name, Component leftEndPoint, Component rightEndPoint,
 			double linkRate, double linkDelay, double bufferSize) {
@@ -26,8 +28,10 @@ public class Link {
 		this.rightEndPoint = rightEndPoint;
 		this.linkRate = linkRate;
 		this.linkDelay = linkDelay;
-		this.totalDelay = linkDelay;
+		this.totalLeftDelay = linkDelay;
+		this.totalRightDelay = linkDelay;
 		this.bufferSize = bufferSize;
+		this.bytesTime = linkDelay;
 	}
 
 	public boolean equals(Object obj) {
@@ -51,8 +55,8 @@ public class Link {
 	}
 
 	public String toString() {
-		return this.linkName + ":(" + leftEndPoint.name + ","
-				+ rightEndPoint.name + ")";
+		return this.linkName /*+ ":(" + leftEndPoint.name + ","
+				+ rightEndPoint.name + ")"*/;
 	}
 
 }

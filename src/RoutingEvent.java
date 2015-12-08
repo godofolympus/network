@@ -13,7 +13,6 @@ public class RoutingEvent extends Event {
 	public List<Event> handle() {
 		boolean distancesChanged = true;
 		for (Router r : routers.values()) {
-			//System.out.println("Name " + r.name + ", " + r.links.size());
 			r.initializeBellmanFord();
 		}
 		for (Router r : routers.values()) {
@@ -21,10 +20,9 @@ public class RoutingEvent extends Event {
 		}
 		while (distancesChanged) {
 			distancesChanged = false;
-			/*
-			 * For each router run an iteration of Bellman Ford, and if
-			 * distances have changed send info to neighbors.
-			 */
+			
+			// For each router run an iteration of Bellman Ford, and if
+			// distances have changed send info to neighbors.
 			for (Router r : routers.values()) {
 				boolean changed = r.updateRoutingTable();
 				if (changed) {
@@ -33,6 +31,8 @@ public class RoutingEvent extends Event {
 				}
 			}
 		}
+		
+		//System.out.println(routers.get("R1").routingTable);
 		return null;
 	}
 
