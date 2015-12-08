@@ -77,14 +77,12 @@ public class Network {
 			String flowName = sc.next();
 			String tcp = sc.next();
 			
-			if (tcp.equals("TAHOE")) {
+			if (tcp.equals("RENO")) {
 				Flow flow = flows.get(flowName);
-				flow.tcp = Constants.TCP.TAHOE;
+				flow.tcp = Constants.TCP.RENO;
 				flow.windowSize = 1.0;
 				flow.slowStartThresh = 1000;
 				
-			} else if (tcp.equals("RENO")) {
-				// TODO: Finish this
 			} else if (tcp.equals("FAST")) {
 				// TODO: Finish this
 			}

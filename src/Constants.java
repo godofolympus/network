@@ -4,7 +4,7 @@
  */
 public class Constants {
 	public static int DEFAULT_WINDOW_SIZE = 10;
-	public static TCP DEFAULT_TCP = TCP.TAHOE;
+	public static TCP DEFAULT_TCP = TCP.RENO;
 	public static int PACKET_SIZE = 1024;
 	public static int ACK_SIZE = 64;
 	
@@ -25,6 +25,6 @@ public class Constants {
 	
 	// TCP Congestion Control Types
 	public enum TCP {
-		TAHOE, RENO, FAST
+		RENO, FAST
 	}
 }

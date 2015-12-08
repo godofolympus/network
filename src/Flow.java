@@ -6,7 +6,7 @@ public class Flow {
 	Host dstHost;
 	double dataAmount;
 	double startTime;
-	double rtt = 0.03;
+	double rtt = /*0.03*/1;
 	
 	Constants.TCP tcp;
 	double slowStartThresh;
@@ -19,7 +19,7 @@ public class Flow {
 	int windowFailed = 0;
 	int dupPacketId = -1;
 	int dupPacketCount = 0;
-	boolean fastRetransmit = false;
+	boolean fastRecovery = false;
 	// TODO: sendingBuffer and receivingBuffer should be moved into host
 	HashMap<Integer, Packet> sendingBuffer = new HashMap<Integer, Packet>();
 	//HashMap<Integer, Double> sendingTimes = new HashMap<Integer, Double>();

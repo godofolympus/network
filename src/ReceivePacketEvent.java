@@ -17,8 +17,6 @@ public class ReceivePacketEvent extends Event {
 		ArrayList<Event> newEvents = new ArrayList<Event>();
 
 		// Packet has been received, so increment packetsSent in link
-		// TODO: Is this the proper way to measure linkRate?
-		// Should we instead average sendRate and receiveRate for a link?
 		if (packet.packetType == Constants.PacketType.DATA) {
 			link.bytesSent += Constants.PACKET_SIZE;
 		} else if (packet.packetType == Constants.PacketType.ACK) {
@@ -50,21 +48,30 @@ public class ReceivePacketEvent extends Event {
 
 				// Adjust the window size depending on TCP congestion algorithm
 				switch (flow.tcp) {
-				case TAHOE:
-					if(!flow.fastRetransmit){
-						if(packet.negPacketId == flow.dupPacketId && flow.windowSize >= flow.slowStartThresh){
+				case RENO:
+					// This code block handles duplicate packets and entering/exiting Fast Recovery
+					if(!flow.fastRecovery){
+						// If we are not currently in Fast Recovery mode, we keep track of duplicate ACKS
+						if(packet.negPacketId == flow.dupPacketId){
+							// If this is duplicate ACK, we increment the count
 							flow.dupPacketCount++;
 						} else{
+							// This is a new ACK packet, so we reset the duplicate value and counts
 							flow.dupPacketId = packet.negPacketId;
 							flow.dupPacketCount = 0;
 						}
-						if(flow.dupPacketCount == 3){
-							System.out.println("Fast Retransmit for Packet" + packet.negPacketId);
-							System.out.println(flow.windowSize + "," + flow.slowStartThresh);
+						
+						// If we now have three duplicate ACKs, we enter Fast Recovery
+						if(flow.dupPacketCount == 3)  {
+//							System.out.println("Fast Retransmit for Packet" + packet.negPacketId);
+//							System.out.println(flow.windowSize + "," + flow.slowStartThresh);
+							
+							// Adjust the slow start threshold and the new window size for
 							flow.slowStartThresh = Math.max((int)flow.windowSize/2, 2);
 							flow.windowSize = flow.slowStartThresh+3;
-							flow.fastRetransmit = true;
-							//Packet minPacket = flow.sendingBuffer.get(packet.negPacketId);
+							flow.fastRecovery = true;
+							
+							// Fast Retransmit of the lost packet
 							Packet minPacket = new Packet(packet.negPacketId,
 									Constants.PacketType.DATA, Constants.PACKET_SIZE,
 									flow.srcHost, flow.dstHost, flow.flowName);
@@ -77,33 +84,41 @@ public class ReceivePacketEvent extends Event {
 							newEvents.add(new NegAckEvent(time + flow.rtt, minPacket, sendEvent, flow.windowFailed));
 						}
 					}
-					else if(flow.fastRetransmit){
+					else {
+						// If we are are currently in Fast Recovery 
 						if(flow.dupPacketId == packet.negPacketId){
+							// If we get a duplicate packet, we infer the successful arrival
+							// of a previously sent packet, so we increment window size
 							flow.windowSize++;
 						} else{
-							System.out.println("Fast Retransmit Ended!");
+							// We received a new ACK so we can exit Fast Recovery
 							flow.windowSize = flow.slowStartThresh;
 							flow.dupPacketId = -1;
 							flow.dupPacketCount = 0;
-							flow.fastRetransmit = false;
+							flow.fastRecovery = false;
 						}
 					}
-					// Only increment windowSize if this is a new ACK packet
-					if (!flow.fastRetransmit && packet.negPacketId > flow.minUnacknowledgedPacketSender) {
+					
+					// This code block handles normal execution for Slow Start and Congestion Avoidance
+					// Only executes if the ACK is a new ACK packet
+					if (!flow.fastRecovery && packet.negPacketId > flow.minUnacknowledgedPacketSender) {
 						
 						// Adjust window size depending on the phase we are in
 						if (flow.windowSize < flow.slowStartThresh) {
+							// Slow Start
 							flow.windowSize++;
 							
 						} else {
+							// Congestion Avoidance
 							flow.windowSize += 1.0 / flow.windowSize;
 						}
 						
+						// Data collection code
 						flow.windowSizeSum += flow.windowSize;
 						flow.windowChangedCount++;
 					}
-					break;
-				case RENO:
+					
+					// End Reno
 					break;
 				case FAST:
 					break;

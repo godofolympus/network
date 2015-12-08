@@ -46,7 +46,8 @@ public class Simulation {
 		// Define variables to use during simulation
 		int eventCount = 0;
 		int dataCollectionFreq = 1;
-		int stopping_count = 100000;
+		int outputFreq = 2000;
+		int stopping_count = 10000000;
 		double prevTime = 0.0;
 
 		// Begin simulation by popping from eventQueue until it is empty
@@ -57,11 +58,15 @@ public class Simulation {
 
 			// Pull next event and print out its information
 			Event event = eventQueue.poll();
-			System.out.println(event);
 
 			// Collect data after handling a given number of events
 			if (eventCount % dataCollectionFreq == 0) {
 				prevTime = dataCollector.collectData(prevTime, event.time);
+			}
+			
+			// Output current event every given number of events
+			if (eventCount % outputFreq == 0) {
+				System.out.println(event);
 			}
 
 			// Call the event handler
