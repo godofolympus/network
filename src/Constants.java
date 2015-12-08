@@ -9,7 +9,7 @@ public class Constants {
 	public static int ACK_SIZE = 64;
 	
 	public static String[] hostFields = {"sendRate", "receiveRate"};
-	public static String[] linkFields = {"occupancyData", "packetsLost", "flowRate"};
+	public static String[] linkFields = {"occupancyData", "packetsLost", "flowRate", "totalDelay"};
 	public static String[] flowFields = {"sendRate", "receiveRate", "rtt", "windowSize", "slowStartThresh"};
 
 	

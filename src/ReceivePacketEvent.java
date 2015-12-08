@@ -24,6 +24,9 @@ public class ReceivePacketEvent extends Event {
 		} else {
 			// TODO: Handle other cases
 		}
+		
+		// Packet has been received, so update the congestion metric of the link
+		link.totalDelay = time - packet.linkArrivalTime;
 
 		// Handle a packet according to whether it is received at a host
 		// or at a router
@@ -52,7 +55,7 @@ public class ReceivePacketEvent extends Event {
 					// This code block handles duplicate packets and entering/exiting Fast Recovery
 					if(!flow.fastRecovery){
 						// If we are not currently in Fast Recovery mode, we keep track of duplicate ACKS
-						if(packet.negPacketId == flow.dupPacketId){
+						if(packet.negPacketId == flow.dupPacketId && flow.windowSize >= flow.slowStartThresh){
 							// If this is duplicate ACK, we increment the count
 							flow.dupPacketCount++;
 						} else{

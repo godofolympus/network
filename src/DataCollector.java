@@ -27,13 +27,14 @@ public class DataCollector {
 					+ link.currentRightBufferAmt;
 			int packetsLost = link.packetsLost;
 			double flowRate = link.bytesSent / (currentTime - prevTime);
+			double totalDelay = link.totalDelay;
 
 			// Reset link data
 			link.packetsLost = 0;
 			link.bytesSent = 0;
 
 			// Add to data element
-			dataElement.addLinkData(link.linkName, occData, packetsLost, flowRate);
+			dataElement.addLinkData(link.linkName, occData, packetsLost, flowRate, totalDelay);
 		}
 
 		// Iterate over flows

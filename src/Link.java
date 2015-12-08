@@ -6,6 +6,7 @@ public class Link {
 	Component rightEndPoint;
 	double linkRate;
 	double linkDelay;
+	double totalDelay;
 	double currentLeftBufferAmt;
 	double currentRightBufferAmt;
 	double bufferSize;
@@ -25,6 +26,7 @@ public class Link {
 		this.rightEndPoint = rightEndPoint;
 		this.linkRate = linkRate;
 		this.linkDelay = linkDelay;
+		this.totalDelay = linkDelay;
 		this.bufferSize = bufferSize;
 	}
 

@@ -7,6 +7,7 @@ public class Packet {
 	String flowName;
 	int negPacketId = -1;
 	double dataSendingTime;
+	double linkArrivalTime;
 
 	public Packet(int id, Constants.PacketType packetType, int size,
 			Host srcHost, Host dstHost, String flowName) {

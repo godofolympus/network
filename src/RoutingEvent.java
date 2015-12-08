@@ -26,7 +26,7 @@ public class RoutingEvent extends Event {
 			 * distances have changed send info to neighbors.
 			 */
 			for (Router r : routers.values()) {
-				boolean changed = r.updateTable();
+				boolean changed = r.updateRoutingTable();
 				if (changed) {
 					r.sendRoutingInfo();
 					distancesChanged = changed;

@@ -45,17 +45,13 @@ public class Simulation {
 
 		// Define variables to use during simulation
 		int eventCount = 0;
-		int dataCollectionFreq = 1;
+		int dataCollectionFreq = 100;
+		int routingFreq = 200;
 		int outputFreq = 2000;
-		int stopping_count = 10000000;
 		double prevTime = 0.0;
 
 		// Begin simulation by popping from eventQueue until it is empty
 		while (eventQueue.size() != 0) {
-			// TODO: Remove stopping count before submitting
-			//if (eventCount > stopping_count)
-			//	break;
-
 			// Pull next event and print out its information
 			Event event = eventQueue.poll();
 
@@ -64,7 +60,12 @@ public class Simulation {
 				prevTime = dataCollector.collectData(prevTime, event.time);
 			}
 			
-			// Output current event every given number of events
+			// Add routing event after a given number of events
+			if (eventCount % routingFreq == 0) {
+				eventQueue.add(new RoutingEvent(event.time, network.routers));
+			}
+			
+			// Output current event after a given number of events
 			if (eventCount % outputFreq == 0) {
 				System.out.println(event);
 			}
@@ -120,25 +121,26 @@ public class Simulation {
 				flowData.get(field).add(element.flowDataList.get(field));
 			}
 		}
-
+		
 		// Plot the data that we collected
 		// Iterate over hosts
 		for (String field : hostData.keySet()) {
 			ArrayList<Double> fieldValues = hostData.get(field);
-			Graph.plot(field, "time (seconds)", field.substring(field.indexOf('-') + 1), null, timeList, fieldValues, null);
+			Graph.plotScatter(field, "time (seconds)", field.substring(field.indexOf('-') + 1), field, timeList, fieldValues, null);
 		}
 
 		// Iterate over links
 		for (String field : linkData.keySet()) {
 			ArrayList<Double> fieldValues = linkData.get(field);
-			Graph.plot(field, "time (seconds)", field.substring(field.indexOf('-') + 1), null, timeList, fieldValues, null);
+			Graph.plotScatter(field, "time (seconds)", field.substring(field.indexOf('-') + 1), field, timeList, fieldValues, null);
 		}
 
 		// Iterate over flows
 		for (String field : flowData.keySet()) {
 			ArrayList<Double> fieldValues = flowData.get(field);
-			Graph.plot(field, "time (seconds)", field.substring(field.indexOf('-') + 1), null, timeList, fieldValues, null);
+			Graph.plotScatter(field, "time (seconds)", field.substring(field.indexOf('-') + 1), field, timeList, fieldValues, null);
 		}
+		
 		
 	}
 
