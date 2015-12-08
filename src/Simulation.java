@@ -45,7 +45,7 @@ public class Simulation {
 
 		// Define variables to use during simulation
 		int eventCount = 0;
-		int dataCollectionFreq = 1;
+		int dataCollectionFreq = 1000;
 		int outputFreq = 2000;
 		int stopping_count = 10000000;
 		double prevTime = 0.0;
@@ -74,10 +74,12 @@ public class Simulation {
 
 			// If handling this event spawns new events, add them to the
 			// priority queue
-			if (newEvents != null) {
+			if (newEvents != null && newEvents.size() > 0) {
+				if(eventQueue.size() == 0 && newEvents.get(0) instanceof FastUpdateEvent){
+					break;
+				}
 				eventQueue.addAll(newEvents);
 			}
-
 			eventCount++;
 		}
 		System.out.println("Simulation concluded");

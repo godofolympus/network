@@ -121,10 +121,13 @@ public class ReceivePacketEvent extends Event {
 					// End Reno
 					break;
 				case FAST:
+					// Adjust window size depending on the phase we are in
+					if (flow.windowSize < flow.slowStartThresh) {
+						// Slow Start
+						flow.windowSize++;
+					}
 					break;
 				}
-				
-
 			} else {
 				// TODO: Handle other cases
 			}
