@@ -41,9 +41,9 @@ public class NegAckEvent extends Event {
 				return newEvents;
 			}
 
-			System.out.println("Ack Failed for Packet " + packet.id
-					+ ", Adding New Packets, Window Size: " + flow.windowSize
-					+ ", Time: " + time);
+//			System.out.println("Ack Failed for Packet " + packet.id
+//					+ ", Adding New Packets, Window Size: " + flow.windowSize
+//					+ ", Time: " + time);
 			// Handle a missed ACK packet depending on the TCP algorithm
 			switch (flow.tcp) {
 			case RENO:

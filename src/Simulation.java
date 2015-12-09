@@ -49,12 +49,14 @@ public class Simulation {
 		// Define variables to use during simulation
 		int eventCount = 0;
 		int dataCollectionFreq = 1000;
-		int routingFreq = 2000;
-		int outputFreq = 20000;
+		int routingFreq = 1000;
+		int outputFreq = 1000;
 		double prevTime = 0.0;
 		
 		double time = 0;
-		double timeInterval = 0.1;
+		double timeInterval = 0.4;
+		
+		int count = 0;
 		
 		// Begin simulation by popping from eventQueue until it is empty
 		while (eventQueue.size() != 0) {
@@ -75,9 +77,21 @@ public class Simulation {
 //				eventQueue.add(new RoutingEvent(event.time, network.routers));
 //			}
 			
+			if ((int) (event.time/5) > count) {
+				count = (int) (event.time/5);
+				eventQueue.add(new RoutingEvent(event.time, network.routers));
+			}
+			
 			// Output current event after a given number of events
-			if (eventCount % outputFreq == 0) {
-				System.out.println(event);
+//			if (eventCount % outputFreq == 0) {
+//				System.out.println(event);
+//			}
+			
+			if (event.time > 4.9 && event.time < 5.1) {
+//				if (event instanceof BufferToLinkEvent) {
+//					System.out.println(event);
+//					System.out.println(network.routers.get("R4").routingTable);
+//				}
 			}
 
 			// Call the event handler
@@ -91,6 +105,7 @@ public class Simulation {
 				}
 				eventQueue.addAll(newEvents);
 			}
+			
 			eventCount++;
 		}
 		System.out.println("Simulation concluded");
@@ -135,17 +150,6 @@ public class Simulation {
 		}
 		
 		// Plot the data that we collected
-		// Iterate over hosts
-//		for (String field : hostData.keySet()) {
-//			ArrayList<Double> fieldValues = hostData.get(field);
-//			Graph.plot(field, "time (seconds)", field.substring(field.indexOf('-') + 1), field, timeList, fieldValues, null);
-//		}
-//
-//		// Iterate over links
-//		for (String field : linkData.keySet()) {
-//			ArrayList<Double> fieldValues = linkData.get(field);
-//			Graph.plot(field, "time (seconds)", field.substring(field.indexOf('-') + 1), field, timeList, fieldValues, null);
-//		}
 		
 		// Iterate over hosts
 		HashMap<String, Chart> hostMap = new HashMap<String, Chart>();
@@ -170,6 +174,10 @@ public class Simulation {
 		for (String field : linkData.keySet()) {
 			ArrayList<Double> fieldValues = linkData.get(field);
 
+			if (Integer.parseInt(field.substring(1, field.indexOf('-'))) > 2 || Integer.parseInt(field.substring(1, field.indexOf('-'))) == 0) {
+				continue;
+			}
+			
 			Chart chart = null;
 			if(linkMap.containsKey(field.substring(field.indexOf('-') + 1))){
 				chart = linkMap.get(field.substring(field.indexOf('-') + 1));
@@ -201,21 +209,6 @@ public class Simulation {
 			new SwingWrapper(chart).displayChart();
 		}
 		
-		// For each field in flows
-		
-//		for (String field : Constants.flowFields) {
-//			Chart 
-//			for (String flow : network.flows.keySet()) {
-//				String key = flow + "-" + field;
-//				System.out.println(key);
-//				fieldValuesList.add(flowData.get(flow + "-" + field));
-//			}
-//			
-//			System.out.println(fieldValuesList.size());
-//			
-//			Graph.multiplot(field, "time (seconds)", field.substring(field.indexOf('-') + 1), network.flows.keySet(), timeList, fieldValuesList, null);
-//		}
-
 	}
 
 }

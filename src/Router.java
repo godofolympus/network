@@ -33,9 +33,15 @@ public class Router extends Component {
 			Component adjComponent = link.getAdjacentEndpoint(this);
 			
 			if (link.leftEndPoint == this) {
-				distances.put(adjComponent.name, link.totalRightDelay);
+				if (link.currentLeftBufferAmt == 0) {
+					link.totalRightDelay = link.linkDelay;
+				}
+				distances.put(adjComponent.name, link.totalRightDelay + link.totalLeftDelay);
 			} else {
-				distances.put(adjComponent.name, link.totalLeftDelay);
+				if (link.currentRightBufferAmt == 0) {
+					link.totalLeftDelay = link.linkDelay;
+				}
+				distances.put(adjComponent.name, link.totalLeftDelay + link.totalRightDelay);
 			}
 			
 			
@@ -57,9 +63,9 @@ public class Router extends Component {
 				
 				double newDist = newDistances.get(componentName);
 				if (link.leftEndPoint == this) {
-					newDist += link.totalRightDelay;
+					newDist += link.totalRightDelay + link.totalLeftDelay;
 				} else {
-					newDist += link.totalLeftDelay;
+					newDist += link.totalLeftDelay + link.totalRightDelay;
 				}
 				
 				// Dynamic programming step to update distance.
