@@ -1,16 +1,19 @@
-import java.util.HashMap;
-
+/**
+ * Generic class used to represent a Packet in the network. Objects of
+ * this type are passed between Components. 
+ */
 public class Packet {
 	int id;
-	Constants.PacketType packetType;
 	int size;
 	Host srcHost;
 	Host dstHost;
 	String flowName;
-	
+	Constants.PacketType packetType;
+
+	// 
 	int negPacketId = -1;
-	
-	
+
+	// Variables used to calculate RTT and congestion delay
 	double dataSendingTime;
 	double linkArrivalTime;
 

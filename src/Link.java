@@ -1,22 +1,34 @@
 import java.util.LinkedList;
 
+/**
+ * Generic class used to represent a Link in the network. 
+ */
 public class Link {
+	// Variables specified in the test cases
 	String linkName;
 	Component leftEndPoint;
 	Component rightEndPoint;
 	double linkRate;
 	double linkDelay;
+	double bufferSize;
+	
+	// Variables used to store congestion metrics
 	double totalLeftDelay;
 	double totalRightDelay;
+	
+	// Variables used to store buffer occupancy
 	double currentLeftBufferAmt;
 	double currentRightBufferAmt;
-	double bufferSize;
+	
+	// Variables that represent the buffers on either end of the link
 	LinkedList<Packet> leftBuffer = new LinkedList<Packet>();
 	LinkedList<Packet> rightBuffer = new LinkedList<Packet>();
-	LinkedList<Double> leftArrivalTimes = new LinkedList<Double>();
-	LinkedList<Double> rightArrivalTimes = new LinkedList<Double>();
 	
-	// Used by DataCollector to plot data
+	
+	//LinkedList<Double> leftArrivalTimes = new LinkedList<Double>();
+	//LinkedList<Double> rightArrivalTimes = new LinkedList<Double>();
+	
+	// Variables used to store relevant data values
 	int packetsLost;
 	double bytesSent;
 	double bytesTime;
@@ -55,8 +67,7 @@ public class Link {
 	}
 
 	public String toString() {
-		return this.linkName /*+ ":(" + leftEndPoint.name + ","
-				+ rightEndPoint.name + ")"*/;
+		return this.linkName;
 	}
 
 }

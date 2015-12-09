@@ -1,5 +1,10 @@
 import java.util.List;
 
+/**
+ * Generic Event class. Serves as the superclass to all events handled by the
+ * event priority queue. All classes that extend this class must implement a
+ * handle() method
+ */
 public abstract class Event implements Comparable<Event> {
 	double time;
 	Packet packet;
@@ -22,10 +27,12 @@ public abstract class Event implements Comparable<Event> {
 		return diff < 0 ? -1 : 1;
 	}
 
+	// Truncate the time value to standardize output
 	public String toString() {
-		return "Time: " + String.format("%.8f",time);
+		return "Time: " + String.format("%.8f", time);
 	}
 
+	// All classes that extend Event must implement this method
 	public abstract List<Event> handle();
 
 }

@@ -1,105 +1,23 @@
 import java.util.HashMap;
 
+/**
+ * Generic class used to represent a Router in the network 
+ */
 public class Router extends Component {
 	HashMap<String, Component> components;
 
-	// This router's routing table and a copy of 
+	// This router's routing table. The second routing table is used by the
+	// dynamic shortest paths algorithm
 	HashMap<String, Link> routingTable = new HashMap<String, Link>();
 	HashMap<String, Link> routingTableCopy;
 	
-	// The distance vector/hash map from this router to other components
+	// A hash map that indicates the estimated distance/cost from this router
+	// to the specified component
 	HashMap<String, Double> distances = new HashMap<String, Double>();
-
-	// Collection of neighbors distance vector/hash map
-	HashMap<Link, HashMap<String, Double>> distancesList = new HashMap<Link, HashMap<String, Double>>();
 
 	public Router(String name) {
 		super(name);
 		this.links = new HashMap<String, Link>();
 		routingTable = new HashMap<String, Link>();
 	}
-
-	public void initializeBellmanFord() {
-		// For all components in the network, set their distance to inf
-		for (String key : components.keySet()) {
-			distances.put(key, Double.POSITIVE_INFINITY);
-		}
-
-		// Set distance of self to zero
-		distances.put(this.name, 0.0);
-
-		// For all the links connected to this router
-		for (Link link : links.values()) {
-			// Set the distance to the adjacent components
-			Component adjComponent = link.getAdjacentEndpoint(this);
-
-			if (link.leftEndPoint == this) {
-				if (link.currentLeftBufferAmt == 0) {
-					link.totalRightDelay = link.linkDelay;
-				}
-				distances.put(adjComponent.name, link.totalRightDelay
-						+ link.totalLeftDelay);
-			} else {
-				if (link.currentRightBufferAmt == 0) {
-					link.totalLeftDelay = link.linkDelay;
-				}
-				distances.put(adjComponent.name, link.totalLeftDelay
-						+ link.totalRightDelay);
-			}
-
-			// Add this distance to the routing table
-			routingTable.put(adjComponent.name, link);
-		}
-	}
-
-	public boolean updateRoutingTable() {
-		boolean distancesChanged = false;
-		if (distancesList == null) {
-			return false;
-		}
-
-		// For each neighbor that sent updated routing info, process distances.
-		for (Link link : distancesList.keySet()) {
-			HashMap<String, Double> newDistances = distancesList.get(link);
-			for (String componentName : newDistances.keySet()) {
-
-				double newDist = newDistances.get(componentName);
-				if (link.leftEndPoint == this) {
-					newDist += link.totalRightDelay + link.totalLeftDelay;
-				} else {
-					newDist += link.totalLeftDelay + link.totalRightDelay;
-				}
-
-				// Dynamic programming step to update distance.
-				if (newDist < distances.get(componentName)) {
-					distances.put(componentName, newDist);
-					routingTable.put(componentName, link);
-					distancesChanged = true;
-				}
-			}
-		}
-		return distancesChanged;
-	}
-
-	// TODO Change this to send packets to neighbors
-	public void sendRoutingInfo() {
-		// Send distance hash map to neighbors
-		for (Link link : links.values()) {
-			Component adjComponent = link.getAdjacentEndpoint(this);
-
-			// For every neighbor that is a router
-			if (adjComponent instanceof Router) {
-				Router r = (Router) adjComponent;
-				r.distancesList.put(link, distances);
-			}
-		}
-	}
-
-	// TODO: Handle routing packets
-//	public Event receivePacket(Double time, Packet packet) {
-//		Link nextLink = this.routingTable.get(packet.dstHost.name);
-//		Component nextDst = nextLink.getAdjacentEndpoint(this);
-//		return new SendPacketEvent(time, packet, this, nextDst, nextLink);
-//	}
-
 }

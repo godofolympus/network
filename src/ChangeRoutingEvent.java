@@ -1,10 +1,9 @@
 import java.util.HashMap;
 import java.util.List;
 
-
 public class ChangeRoutingEvent extends Event {
 	HashMap<String, Router> routers;
-	
+
 	public ChangeRoutingEvent(double time, HashMap<String, Router> routers) {
 		super(time);
 		this.routers = routers;
@@ -16,8 +15,12 @@ public class ChangeRoutingEvent extends Event {
 		for (Router router : routers.values()) {
 			router.routingTable = router.routingTableCopy;
 		}
-		
-		// TODO: Consider scheduling next Routing Event from here
+
 		return null;
+	}
+
+	public String toString() {
+		return super.toString()
+				+ "\t\t\tEvent Type: ChangeRoutingEvent\t\t\tDetails: All routers switching to new routing tables";
 	}
 }

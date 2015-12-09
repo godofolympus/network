@@ -2,6 +2,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * Generic class used to represent a Host in the network
+ */
 public class Host extends Component {
 	HashMap<String, Flow> currentFlows = new HashMap<String, Flow>();
 

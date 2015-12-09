@@ -1,8 +1,12 @@
 import java.util.HashMap;
 
-// Superclass for hosts and routers
-public class Component {
+/**
+ * Component represents a generic packet sending/receiving entity in the
+ * network. It serves as the superclass of Router and Host
+ */
+public abstract class Component {
 	String name;
+	// A hash map that holds all the adjacent links to this component
 	HashMap<String, Link> links = new HashMap<String, Link>();
 
 	public Component(String name) {

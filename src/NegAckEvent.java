@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 public class NegAckEvent extends Event {
@@ -57,10 +56,6 @@ public class NegAckEvent extends Event {
 			case FAST:
 				break;
 			}
-
-			// Data collection code
-			flow.windowSizeSum += flow.windowSize;
-			flow.windowChangedCount++;
 
 			// In Go-Back-N, we resend the entire window if an ACK is missed.
 			// Update windowFailed to know which NegAckEvents to consider later

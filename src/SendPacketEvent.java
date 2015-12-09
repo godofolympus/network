@@ -46,7 +46,7 @@ public class SendPacketEvent extends Event {
 				&& (link.currentLeftBufferAmt + packet.size <= link.bufferSize)) {
 			// Place packet on the left buffer and change corresponding values
 			link.leftBuffer.offer(packet);
-			link.leftArrivalTimes.offer(time);
+			//link.leftArrivalTimes.offer(time);
 			packet.linkArrivalTime = time;
 			link.currentLeftBufferAmt += packet.size;
 			dir = Constants.Direction.RIGHT;
@@ -62,7 +62,7 @@ public class SendPacketEvent extends Event {
 				&& (link.currentRightBufferAmt + packet.size <= link.bufferSize)) {
 			// Place packet on the right buffer and change corresponding values
 			link.rightBuffer.offer(packet);
-			link.rightArrivalTimes.offer(time);
+			//link.rightArrivalTimes.offer(time);
 			packet.linkArrivalTime = time;
 			link.currentRightBufferAmt += packet.size;
 			dir = Constants.Direction.LEFT;

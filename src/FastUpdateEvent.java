@@ -15,7 +15,11 @@ public class FastUpdateEvent extends Event{
 	public List<Event> handle() {
 		ArrayList<Event> newEvents = new ArrayList<Event>();
 		flow.windowSize = flow.minRtt/flow.rtt*flow.windowSize + 30;
-		newEvents.add(new FastUpdateEvent(this.time+timeInterval, timeInterval, flow));
+		
+		if (!flow.flowFinished) {
+			newEvents.add(new FastUpdateEvent(this.time+timeInterval, timeInterval, flow));
+		}
+		
 		return newEvents;
 	}
 	

@@ -139,10 +139,6 @@ public class ReceivePacketEvent extends Event {
 							// Congestion Avoidance
 							flow.windowSize += 1.0 / flow.windowSize;
 						}
-
-						// Data collection code
-						flow.windowSizeSum += flow.windowSize;
-						flow.windowChangedCount++;
 					}
 
 					// End Reno
@@ -162,6 +158,11 @@ public class ReceivePacketEvent extends Event {
 
 			// Handle the package appropriately
 			newEvents.addAll(host.receivePacket(this.time, this.packet));
+			
+			// Flow has finished transmitting
+			if (flow.minUnacknowledgedPacketSender == flow.totalPackets) {
+				flow.flowFinished = true;
+			}
 
 		} else {
 			// Packet received at a router
