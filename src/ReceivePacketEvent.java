@@ -171,7 +171,9 @@ public class ReceivePacketEvent extends Event {
 
 	/**
 	 * This function handles the logic of a router receiving a routing 
-	 * packet
+	 * packet by running the update step of the Bellman Ford algorithm. 
+	 * If changes are made to the router's distances, we send additional
+	 * routing packets to adjacent routers
 	 */
 	private List<Event> handleRouterRouting(Router r, Packet p, Link l) {
 		boolean distancesChanged = false;
@@ -201,7 +203,7 @@ public class ReceivePacketEvent extends Event {
 
 	/**
 	 * This function handles the logic of a router receiving a data or 
-	 * ack packet.
+	 * ack packet. We simply send it along the appropriate link
 	 */
 	private Event handleRouterDataAck(Router r, Packet p) {
 		Link nextLink = r.routingTable.get(p.dstHost.name);
@@ -209,6 +211,9 @@ public class ReceivePacketEvent extends Event {
 		return new SendPacketEvent(time, p, r, nextDst, nextLink);
 	}
 	
+	/**
+	 * This function sends updated distance info to all adjacent routers
+	 */
 	private List<Event> sendRoutingInfo(Router r) {
 		ArrayList<Event> newEvents = new ArrayList<Event>();
 
