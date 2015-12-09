@@ -10,8 +10,8 @@ public class Packet {
 	String flowName;
 	Constants.PacketType packetType;
 
-	// 
-	int negPacketId = -1;
+	// Variable that contains the id of the next packet to be sent
+	int nextPacketId = -1;
 
 	// Variables used to calculate RTT and congestion delay
 	double dataSendingTime;

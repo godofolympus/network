@@ -5,6 +5,8 @@
 public class Constants {
 	// Congestion Control constants
 	public static int DEFAULT_WINDOW_SIZE = 10;
+	public static double DEFAULT_RTT = 1.0;
+	public static double RTT_MULTIPLIER = 3.0;
 	public static double TCP_FAST_TIME_INTERVAL = 0.2;
 
 	// Packet sizes

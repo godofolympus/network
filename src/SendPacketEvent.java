@@ -1,6 +1,10 @@
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Class that handles the logic of sending a packet between two 
+ * adjacent Component objects.
+ */
 public class SendPacketEvent extends Event {
 	Link link;
 	Component src;
@@ -15,38 +19,46 @@ public class SendPacketEvent extends Event {
 		this.link = link;
 	}
 
+	/**
+	 * This function takes a packet that is being sent from Component src
+	 * to Component dst and places it on the correct side of the link buffer.
+	 * It also collects some data if appropriate 
+	 */
 	@Override
-	// TODO: Check that the two buffer code is correct
 	public List<Event> handle() {
 
 		// Declare variables for newEvents and direction
 		ArrayList<Event> newEvents = new ArrayList<Event>();
 		Constants.Direction dir = null;
-
-		// If this SendPacketEvent object is being sent from the srcHost
-		// then update the host sendRate. If it is also a data packet, then
-		// also update the flow sendRate
-		if ((packet.srcHost != null) && (src.name.equals(packet.srcHost.name))) {
-			Host host = (Host) src;
-			Flow flow = host.currentFlows.get(packet.flowName);
-			
-			if (packet.packetType == Constants.PacketType.DATA) {
-				packet.dataSendingTime = time;
-				host.bytesSent += Constants.DATA_PACKET_SIZE;
-				flow.bytesSent += Constants.DATA_PACKET_SIZE;
-			} else {
-				host.bytesSent += Constants.ACK_PACKET_SIZE;
+		
+		// Some data collection code
+		if (packet.packetType == Constants.PacketType.DATA || packet.packetType == Constants.PacketType.ACK) {
+			// We only collect this data for data and ack packets
+			if (src.name.equals(packet.srcHost.name)) {
+				// If we are sending this packet from the srcHost, we increase
+				// the total bytes sent by the host
+				Host host = (Host) src;
+				Flow flow = host.currentFlows.get(packet.flowName);
+				host.bytesSent += packet.size;
+				
+				if (packet.packetType == Constants.PacketType.DATA) {
+					// This time value is used in our RTT calculations later on
+					packet.dataSendingTime = time;
+					
+					// For data packets, we also increase the total bytes
+					// sent by the host
+					flow.bytesSent += packet.size;
+				}
 			}
 		}
 		
 
-		// Determine which direction this packet is traveling and if theres room
-		// on the corresponding buffer
+		// Determine which direction this packet is traveling and if there is
+		//  room on the corresponding buffer
 		if (src.equals(link.leftEndPoint)
 				&& (link.currentLeftBufferAmt + packet.size <= link.bufferSize)) {
 			// Place packet on the left buffer and change corresponding values
 			link.leftBuffer.offer(packet);
-			//link.leftArrivalTimes.offer(time);
 			packet.linkArrivalTime = time;
 			link.currentLeftBufferAmt += packet.size;
 			dir = Constants.Direction.RIGHT;
@@ -62,7 +74,6 @@ public class SendPacketEvent extends Event {
 				&& (link.currentRightBufferAmt + packet.size <= link.bufferSize)) {
 			// Place packet on the right buffer and change corresponding values
 			link.rightBuffer.offer(packet);
-			//link.rightArrivalTimes.offer(time);
 			packet.linkArrivalTime = time;
 			link.currentRightBufferAmt += packet.size;
 			dir = Constants.Direction.LEFT;
@@ -75,8 +86,7 @@ public class SendPacketEvent extends Event {
 			}
 
 		} else {
-			// Handle case where packet is dropped
-			//System.out.println("Packet Lost: " + packet.id + " Time " + time);
+			// The packet is dropped, so update this value
 			link.packetsLost++;
 		}
 

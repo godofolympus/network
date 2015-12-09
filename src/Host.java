@@ -41,7 +41,7 @@ public class Host extends Component {
 			Packet ackPacket = new Packet(packet.id,
 					Constants.PacketType.ACK, Constants.ACK_PACKET_SIZE, this,
 					packet.srcHost, packet.flowName);
-			ackPacket.negPacketId = flow.minUnacknowledgedPacketReceiver;
+			ackPacket.nextPacketId = flow.minUnacknowledgedPacketReceiver;
 			ackPacket.dataSendingTime = packet.dataSendingTime;
 			Link link = this.links.values().iterator().next();
 			Component currentDst = link.getAdjacentEndpoint(this);
@@ -54,11 +54,11 @@ public class Host extends Component {
 			// + 0.5 * flow.rtt + 0.0001);
 			flow.rtt = time - packet.dataSendingTime;
 			flow.minRtt = Math.min(flow.rtt, flow.minRtt);
-			flow.timeout = 3*flow.rtt;
+			flow.timeout = flow.rtt * Constants.RTT_MULTIPLIER;
 
 			// Update sending buffer window.
 			//flow.currentPackets++;
-			int nextUnacknowledgedPacket = packet.negPacketId;
+			int nextUnacknowledgedPacket = packet.nextPacketId;
 			while (flow.minUnacknowledgedPacketSender < nextUnacknowledgedPacket) {
 				if(flow.sendingBuffer.containsKey(flow.minUnacknowledgedPacketSender)){
 					flow.sendingBuffer.remove(flow.minUnacknowledgedPacketSender);

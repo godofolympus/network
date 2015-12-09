@@ -17,8 +17,8 @@ public class Flow {
 	int windowFailed = 0;
 	
 	// Variables used for congestion control
-	double rtt = 1.0;
-	double timeout = 3.0;
+	double rtt = Constants.DEFAULT_RTT;
+	double timeout = Constants.RTT_MULTIPLIER * Constants.DEFAULT_RTT;
 	double minRtt = rtt;
 	double slowStartThresh;
 	Constants.TCP tcp;

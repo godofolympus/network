@@ -16,9 +16,6 @@ public class Simulation {
 	 * with the earliest execution time from the priority queue and handle the
 	 * event. Lastly, we organize the data we collected during execution and
 	 * plot the results
-	 * 
-	 * @param args
-	 * @throws IOException
 	 */
 	public static void main(String[] args) throws IOException {
 		// Retrieve filename from user through standard input
@@ -51,7 +48,8 @@ public class Simulation {
 		// Define variables to use during simulation
 		int eventCount = 0;
 		double intervalStartTime = 0;
-		double nextRoutingTime = Constants.ROUTING_INTERVAL - Constants.ROUTING_TIMEOUT;
+		double nextRoutingTime = Constants.ROUTING_INTERVAL
+				- Constants.ROUTING_TIMEOUT;
 
 		// Begin simulation by popping from eventQueue until it is empty
 		while (eventQueue.size() != 0) {
@@ -196,7 +194,5 @@ public class Simulation {
 		for (Chart chart : flowMap.values()) {
 			new SwingWrapper(chart).displayChart();
 		}
-
 	}
-
 }
