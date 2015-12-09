@@ -92,7 +92,7 @@ public class ReceivePacketEvent extends Event {
 									time, minPacket, flow.srcHost, currentDst,
 									link);
 							newEvents.add(sendEvent);
-							newEvents.add(new NegAckEvent(time + flow.rtt,
+							newEvents.add(new NegAckEvent(time + flow.timeout,
 									minPacket, sendEvent, flow.windowFailed));
 						}
 					} else {
@@ -142,6 +142,7 @@ public class ReceivePacketEvent extends Event {
 			if (flow.minUnacknowledgedPacketSender == flow.totalPackets) {
 				// Flow has finished transmitting
 				flow.flowFinished = true;
+				flow.windowSize = 0.0;
 			}
 
 		} else {

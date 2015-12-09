@@ -8,6 +8,7 @@ public class Constants {
 	public static double DEFAULT_RTT = 1.0;
 	public static double RTT_MULTIPLIER = 3.0;
 	public static double TCP_FAST_TIME_INTERVAL = 0.2;
+	public static double TCP_FAST_ALPHA = 30.0;
 
 	// Packet sizes
 	public static int DATA_PACKET_SIZE = 1024;
@@ -27,7 +28,7 @@ public class Constants {
 	public static String[] linkFields = { "occupancyData", "packetsLost",
 			"linkRate" };
 	public static String[] flowFields = { "flowSendRate", "flowReceiveRate",
-			"rtt", "windowSize" };
+			"packetDelay", "windowSize" };
 
 	// Packet Types
 	public enum PacketType {

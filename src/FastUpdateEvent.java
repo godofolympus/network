@@ -1,6 +1,9 @@
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Event that handles the logic of updating a flow's window size for TCP FAST
+ */
 public class FastUpdateEvent extends Event{
 	Flow flow;
 	double timeInterval = 0.1;
@@ -11,11 +14,19 @@ public class FastUpdateEvent extends Event{
 		this.timeInterval = timeInterval;
 	}
 
+	/**
+	 * This function updates a flow's window size using the update rule for 
+	 * TCP FAST. It then reschedules a new FastUpdateEvent as long as the flow
+	 * is still sending data
+	 */
 	@Override
 	public List<Event> handle() {
 		ArrayList<Event> newEvents = new ArrayList<Event>();
-		flow.windowSize = flow.minRtt/flow.rtt*flow.windowSize + 30;
 		
+		// Update the window size using the TCP FAST update rule
+		flow.windowSize = flow.minRtt/flow.rtt*flow.windowSize + Constants.TCP_FAST_ALPHA;
+		
+		// Schedule new events only if the flow is still sending packets
 		if (!flow.flowFinished) {
 			newEvents.add(new FastUpdateEvent(this.time+timeInterval, timeInterval, flow));
 		}

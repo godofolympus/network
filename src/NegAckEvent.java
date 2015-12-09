@@ -1,6 +1,9 @@
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Event that handles the logic of RTT timeouts
+ */
 public class NegAckEvent extends Event {
 	SendPacketEvent sendEvent;
 	int windowId;
@@ -11,7 +14,10 @@ public class NegAckEvent extends Event {
 		this.sendEvent = sendEvent;
 		this.windowId = windowId;
 	}
-
+	
+	/**
+	 * This function 
+	 */
 	@Override
 	public List<Event> handle() {
 		ArrayList<Event> newEvents = new ArrayList<Event>();
@@ -34,15 +40,11 @@ public class NegAckEvent extends Event {
 		// If packet is still in the sending buffer then the packet is lost
 		if (flow.sendingBuffer.containsKey(packet.id)) {
 			// In Go-Back-N, we must resend the entire window if one packet
-			// fails
-			// Here we check to see if this NegAckEvent should be dismissed
+			// fails so we check to see if this NegAckEvent should be dismissed
 			if (windowId < flow.windowFailed) {
 				return newEvents;
 			}
 
-//			System.out.println("Ack Failed for Packet " + packet.id
-//					+ ", Adding New Packets, Window Size: " + flow.windowSize
-//					+ ", Time: " + time);
 			// Handle a missed ACK packet depending on the TCP algorithm
 			switch (flow.tcp) {
 			case RENO:
@@ -63,8 +65,6 @@ public class NegAckEvent extends Event {
 			flow.sendingBuffer.clear();
 
 			// Resend the current window
-			// TODO: Check to see if this for loop is necessary. If the window size is
-			// one then it is not necessary
 			for (int packetId = flow.minUnacknowledgedPacketSender; packetId < Math
 					.min(flow.totalPackets, flow.minUnacknowledgedPacketSender
 							+ Math.floor(flow.windowSize)); packetId++) {

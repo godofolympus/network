@@ -154,12 +154,6 @@ public class Simulation {
 		for (String field : linkData.keySet()) {
 			ArrayList<Double> fieldValues = linkData.get(field);
 
-			// Prints just links 1 and 2
-			if (Integer.parseInt(field.substring(1, field.indexOf('-'))) > 2
-					|| Integer.parseInt(field.substring(1, field.indexOf('-'))) == 0) {
-				continue;
-			}
-
 			Chart chart = null;
 			if (linkMap.containsKey(field.substring(field.indexOf('-') + 1))) {
 				chart = linkMap.get(field.substring(field.indexOf('-') + 1));
