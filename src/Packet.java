@@ -1,3 +1,5 @@
+import java.util.HashMap;
+
 public class Packet {
 	int id;
 	Constants.PacketType packetType;
@@ -5,7 +7,10 @@ public class Packet {
 	Host srcHost;
 	Host dstHost;
 	String flowName;
+	
 	int negPacketId = -1;
+	
+	
 	double dataSendingTime;
 	double linkArrivalTime;
 

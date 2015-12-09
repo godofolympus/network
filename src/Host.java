@@ -36,7 +36,7 @@ public class Host extends Component {
 			// Schedule acknowledgment packet to send back to src
 			//System.out.println("New ACK Packet for Packet " + packet.id);
 			Packet ackPacket = new Packet(packet.id,
-					Constants.PacketType.ACK, Constants.ACK_SIZE, this,
+					Constants.PacketType.ACK, Constants.ACK_PACKET_SIZE, this,
 					packet.srcHost, packet.flowName);
 			ackPacket.negPacketId = flow.minUnacknowledgedPacketReceiver;
 			ackPacket.dataSendingTime = packet.dataSendingTime;
@@ -71,7 +71,7 @@ public class Host extends Component {
 					continue;
 				}
 				Packet nextPacket = new Packet(packetId,
-						Constants.PacketType.DATA, Constants.PACKET_SIZE,
+						Constants.PacketType.DATA, Constants.DATA_PACKET_SIZE,
 						flow.srcHost, flow.dstHost, flow.flowName);
 				// System.out.println("New DATA Packet " + nextPacket.id);
 				flow.sendingBuffer.put(nextPacket.id, nextPacket);

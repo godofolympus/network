@@ -76,7 +76,7 @@ public class NegAckEvent extends Event {
 				
 				// New packet to be sent
 				Packet nextPacket = new Packet(packetId,
-						Constants.PacketType.DATA, Constants.PACKET_SIZE,
+						Constants.PacketType.DATA, Constants.DATA_PACKET_SIZE,
 						flow.srcHost, flow.dstHost, flow.flowName);
 
 				// Code to send this packet

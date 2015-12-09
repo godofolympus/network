@@ -43,7 +43,7 @@ public class Flow {
 		this.dataAmount = amt;
 		this.startTime = time;
 
-		this.totalPackets = (int) Math.ceil(amt / Constants.PACKET_SIZE);
+		this.totalPackets = (int) Math.ceil(amt / Constants.DATA_PACKET_SIZE);
 		this.windowSize = Constants.DEFAULT_WINDOW_SIZE;
 	}
 

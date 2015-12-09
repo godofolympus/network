@@ -5,8 +5,11 @@
 public class Constants {
 	public static int DEFAULT_WINDOW_SIZE = 10;
 	public static TCP DEFAULT_TCP = TCP.RENO;
-	public static int PACKET_SIZE = 1024;
-	public static int ACK_SIZE = 64;
+	public static int DATA_PACKET_SIZE = 1024;
+	public static int ACK_PACKET_SIZE = 64;
+	public static int ROUTING_PACKET_SIZE = 1024;
+	public static double ROUTING_TIMEOUT = 1.0;
+	public static double ROUTING_INTERVAL = 5.0;
 	public static double TCP_FAST_TIME_INTERVAL = 0.2;
 	
 	public static String[] hostFields = {"hostSendRate", "hostReceiveRate"};
@@ -16,7 +19,7 @@ public class Constants {
 	
 	// Packet types
 	public enum PacketType {
-		DATA, ACK
+		DATA, ACK, ROUTING
 	}
 
 	// Direction types

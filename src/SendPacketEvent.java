@@ -26,18 +26,19 @@ public class SendPacketEvent extends Event {
 		// If this SendPacketEvent object is being sent from the srcHost
 		// then update the host sendRate. If it is also a data packet, then
 		// also update the flow sendRate
-		if (src.name.equals(packet.srcHost.name)) {
+		if ((packet.srcHost != null) && (src.name.equals(packet.srcHost.name))) {
 			Host host = (Host) src;
 			Flow flow = host.currentFlows.get(packet.flowName);
 			
 			if (packet.packetType == Constants.PacketType.DATA) {
 				packet.dataSendingTime = time;
-				host.bytesSent += Constants.PACKET_SIZE;
-				flow.bytesSent += Constants.PACKET_SIZE;
+				host.bytesSent += Constants.DATA_PACKET_SIZE;
+				flow.bytesSent += Constants.DATA_PACKET_SIZE;
 			} else {
-				host.bytesSent += Constants.ACK_SIZE;
+				host.bytesSent += Constants.ACK_PACKET_SIZE;
 			}
 		}
+		
 
 		// Determine which direction this packet is traveling and if theres room
 		// on the corresponding buffer

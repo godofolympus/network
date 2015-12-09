@@ -36,7 +36,7 @@ public class Simulation {
 		// Routing Table
 		// TODO Change this so that it happens dynamically throughout simulation
 		// of network
-		eventQueue.add(new RoutingEvent(-1, network.routers));
+		eventQueue.add(new RoutingEvent(-Constants.ROUTING_TIMEOUT - 0.1, network.routers));
 
 		// Initialize eventQueue with initializeFlowEvent objects for
 		// each flow we want to simulate
@@ -50,13 +50,14 @@ public class Simulation {
 		int eventCount = 0;
 		int dataCollectionFreq = 1000;
 		int routingFreq = 1000;
-		int outputFreq = 1000;
+		int outputFreq = 10000;
 		double prevTime = 0.0;
 		
 		double time = 0;
-		double timeInterval = 0.4;
+		double timeInterval = 0.1; // TCP RENO: 0.02 TCP FAST: 0.1
 		
-		int count = 0;
+		
+		double nextRoutingTime = Constants.ROUTING_INTERVAL - 1.0;
 		
 		// Begin simulation by popping from eventQueue until it is empty
 		while (eventQueue.size() != 0) {
@@ -67,32 +68,23 @@ public class Simulation {
 			//if (eventCount % dataCollectionFreq == 0) {
 			//	prevTime = dataCollector.collectData(prevTime, event.time);
 			//}
-			while(event.time > time){
+			while(event.time > time && event.time > 0.0){
 				dataCollector.collectData(time, time + timeInterval);
 				time += timeInterval;
 			}
 			
-			// Add routing event after a given number of events
-//			if (eventCount % routingFreq == 0) {
-//				eventQueue.add(new RoutingEvent(event.time, network.routers));
-//			}
 			
-			if ((int) (event.time/5) > count) {
-				count = (int) (event.time/5);
+			// Add routing event after every few seconds
+			if (event.time >= nextRoutingTime) {
+				nextRoutingTime += Constants.ROUTING_INTERVAL;
 				eventQueue.add(new RoutingEvent(event.time, network.routers));
 			}
 			
 			// Output current event after a given number of events
-//			if (eventCount % outputFreq == 0) {
-//				System.out.println(event);
-//			}
-			
-			if (event.time > 4.9 && event.time < 5.1) {
-//				if (event instanceof BufferToLinkEvent) {
-//					System.out.println(event);
-//					System.out.println(network.routers.get("R4").routingTable);
-//				}
+			if (eventCount % outputFreq == 0) {
+				System.out.println(event);
 			}
+			
 
 			// Call the event handler
 			List<Event> newEvents = event.handle();

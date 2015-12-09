@@ -21,7 +21,7 @@ public class InitializeFlowEvent extends Event {
 				flow.totalPackets); packetId++) {
 			// Create new Packet object based on flow information
 			Packet packet = new Packet(packetId, Constants.PacketType.DATA,
-					Constants.PACKET_SIZE, flow.srcHost, flow.dstHost,
+					Constants.DATA_PACKET_SIZE, flow.srcHost, flow.dstHost,
 					flow.flowName);
 
 			// Place packet/time in respective buffer
