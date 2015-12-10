@@ -77,19 +77,19 @@ public class BufferToLinkEvent extends Event {
 		// The string returned depends on the direction of this BufferToLinkEvent
 		if (this.direction == Constants.Direction.RIGHT) {
 			return super.toString()
-					+ "\t\t\tEvent Type: BufferToLinkEvent\t\t\tDetails: Sending packet "
+					+ "\t\t\tEvent Type: BufferToLinkEvent\t\t\tDetails: Placing packet "
 					+ this.packet.flowName + "-" + this.packet.id + "-"
 					+ this.packet.packetType + " from "
 					+ this.link.leftEndPoint.name + " to "
-					+ this.link.rightEndPoint.name + " over link "
+					+ this.link.rightEndPoint.name + " on link "
 					+ this.link.linkName;
 		} else {
 			return super.toString()
-					+ "\t\t\tEvent Type: BufferToLinkEvent\t\t\tDetails: Sending packet "
+					+ "\t\t\tEvent Type: BufferToLinkEvent\t\t\tDetails: Placing packet "
 					+ this.packet.flowName + "-" + this.packet.id + "-"
 					+ this.packet.packetType + " from "
 					+ this.link.rightEndPoint.name + " to "
-					+ this.link.leftEndPoint.name + " over link "
+					+ this.link.leftEndPoint.name + " on link "
 					+ this.link.linkName;
 		}
 	}

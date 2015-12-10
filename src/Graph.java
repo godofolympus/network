@@ -12,6 +12,12 @@ import org.knowm.xchart.QuickChart;
  * We use the xChart API to facilitate graphing
  */
 public class Graph {
+	
+	/**
+	 * Function that is used for graphing a given series. If this is the first 
+	 * series, then a new graph is generated. Otherwise, the series is simply 
+	 * added to the graph that is passed in as an argument. 
+	 */
 	static Chart plot(String chartTitle, String xTitle, String yTitle,
 			String seriesName, ArrayList<Double> x, ArrayList<Double> y,
 			String filename, Chart chart) {

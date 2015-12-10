@@ -1,6 +1,9 @@
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Event that handles the logic of initializing a flow
+ */
 public class InitializeFlowEvent extends Event {
 	Flow flow;
 
@@ -9,6 +12,10 @@ public class InitializeFlowEvent extends Event {
 		this.flow = flow;
 	}
 
+	/**
+	 * This function sets up the basic parameters for a new flow and sends
+	 * out the initial packets. 
+	 */
 	@Override
 	public List<Event> handle() {
 		// Put this flow into the currentFlows list in both the src and dst
@@ -38,14 +45,17 @@ public class InitializeFlowEvent extends Event {
 			events.add(sendEvent);
 
 			// Schedule NegAckEvent to handle any packets that have not been
-			// acknowledged within one RTT
+			// acknowledged within one RTT timeout
 			events.add(new NegAckEvent(time + flow.timeout, packet, sendEvent,
 					flow.windowFailed));
 		}
+		
+		// If the congestion control algorithm is TCP FAST, schedule the first 
+		// FastUpdateEvent
 		if (flow.tcp == Constants.TCP.FAST) {
-			events.add(
-					new FastUpdateEvent(time + Constants.TCP_FAST_TIME_INTERVAL,
-							Constants.TCP_FAST_TIME_INTERVAL, flow));
+			events.add(new FastUpdateEvent(time
+					+ Constants.TCP_FAST_TIME_INTERVAL,
+					Constants.TCP_FAST_TIME_INTERVAL, flow));
 		}
 
 		// Return a list of events to add to the event priority queue

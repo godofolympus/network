@@ -15,6 +15,10 @@ public class ReceivePacketEvent extends Event {
 		this.link = link;
 	}
 
+	/**
+	 * Function that handles receiving a packet at either a host 
+	 * or a router. 
+	 */
 	@Override
 	public List<Event> handle() {
 		ArrayList<Event> newEvents = new ArrayList<Event>();

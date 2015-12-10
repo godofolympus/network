@@ -98,6 +98,6 @@ public class NegAckEvent extends Event {
 		return super.toString()
 				+ "\t\t\tEvent Type: NegAckEvent\t\t\t\tDetails: Check that ACK for packet "
 				+ this.packet.flowName + "-" + this.packet.id
-				+ " arrived at host " + packet.dstHost.name + " before one rtt";
+				+ " arrived at host " + packet.dstHost.name + " before one rtt timeout";
 	}
 }

@@ -27,6 +27,9 @@ public class Flow {
 	int currentPackets = 0;
 	int minUnacknowledgedPacketSender = 0;
 	int minUnacknowledgedPacketReceiver = 0;
+	
+	// Sending buffer is only accessed by the srcHost and receiving buffer
+	// is only accessed by the dstHost
 	HashMap<Integer, Packet> sendingBuffer = new HashMap<Integer, Packet>();
 	HashMap<Integer, Packet> receivingBuffer = new HashMap<Integer, Packet>();
 	
