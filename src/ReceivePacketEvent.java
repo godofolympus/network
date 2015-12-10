@@ -19,7 +19,7 @@ public class ReceivePacketEvent extends Event {
 	public List<Event> handle() {
 		ArrayList<Event> newEvents = new ArrayList<Event>();
 		
-		// Collect this data for all packet types
+		// Collect data for packet leaving the link
 		link.bytesSent -= packet.size;
 		link.bytesTime -= packet.size / link.linkRate;
 
@@ -35,13 +35,13 @@ public class ReceivePacketEvent extends Event {
 		if ((packet.dstHost != null) && (component.name.equals(packet.dstHost.name))) {
 			// Checking that packet.dstHost is not null automatically checks
 			// that packet.packetType is not ROUTING
-			
-			// Packet has reached destination host so count it towards the
-			// flows receiveRate
+
 			Host host = (Host) component;
 			Flow flow = host.currentFlows.get(packet.flowName);
-			host.bytesReceived += packet.size;
 
+			// Packet has reached destination host so count it towards the
+			// flow's receiveRate
+			host.bytesReceived += packet.size;
 			if (packet.packetType == Constants.PacketType.DATA) {
 				// Data packet received at host
 				flow.bytesReceived += Constants.DATA_PACKET_SIZE;
@@ -102,7 +102,7 @@ public class ReceivePacketEvent extends Event {
 							// of a previously sent packet, so we increment window size
 							flow.windowSize++;
 						} else {
-							// We received a new ACK so we can exit Fast
+							// We received a new ack packet so we can exit Fast
 							// Recovery
 							flow.windowSize = flow.slowStartThresh;
 							flow.dupPacketId = -1;

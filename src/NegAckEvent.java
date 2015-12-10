@@ -2,7 +2,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Event that handles the logic of RTT timeouts
+ * Event that handles the logic of RTT timeouts for packets that have not been
+ * acknowledged.
  */
 public class NegAckEvent extends Event {
 	SendPacketEvent sendEvent;
@@ -14,9 +15,11 @@ public class NegAckEvent extends Event {
 		this.sendEvent = sendEvent;
 		this.windowId = windowId;
 	}
-	
+
 	/**
-	 * This function 
+	 * This function handles the event of a packet not receiving an ACK by the
+	 * timeout period. It automatically reschedules the event based on the
+	 * current RTT estimate and dismisses the event if unnecessary.
 	 */
 	@Override
 	public List<Event> handle() {
@@ -39,8 +42,9 @@ public class NegAckEvent extends Event {
 
 		// If packet is still in the sending buffer then the packet is lost
 		if (flow.sendingBuffer.containsKey(packet.id)) {
-			// In Go-Back-N, we must resend the entire window if one packet
-			// fails so we check to see if this NegAckEvent should be dismissed
+			// If another packet in the window has already timed-out, we can
+			// dismiss this NegAckEvent since all packets in the window will
+			// already be resent properly
 			if (windowId < flow.windowFailed) {
 				return newEvents;
 			}
@@ -59,16 +63,16 @@ public class NegAckEvent extends Event {
 				break;
 			}
 
-			// In Go-Back-N, we resend the entire window if an ACK is missed.
-			// Update windowFailed to know which NegAckEvents to consider later
+			// In Go-Back-N, we resend the entire window if an ACK is missed. We
+			// update windowFailed to dismiss future NegAckEvents for the
+			// current window.
 			flow.windowFailed += 1;
 			flow.sendingBuffer.clear();
 
-			// Resend the current window
+			// Resend the current window with the new window size
 			for (int packetId = flow.minUnacknowledgedPacketSender; packetId < Math
 					.min(flow.totalPackets, flow.minUnacknowledgedPacketSender
 							+ Math.floor(flow.windowSize)); packetId++) {
-				
 				// New packet to be sent
 				Packet nextPacket = new Packet(packetId,
 						Constants.PacketType.DATA, Constants.DATA_PACKET_SIZE,
@@ -78,7 +82,6 @@ public class NegAckEvent extends Event {
 				flow.sendingBuffer.put(nextPacket.id, nextPacket);
 				Link link = flow.srcHost.links.values().iterator().next();
 				Component currentDst = link.getAdjacentEndpoint(flow.srcHost);
-
 				SendPacketEvent sendEvent = new SendPacketEvent(time,
 						nextPacket, flow.srcHost, currentDst, link);
 				newEvents.add(sendEvent);
